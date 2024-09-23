@@ -24,7 +24,6 @@ def convert_to_base_10(number: str, base: int) -> str:
         if char not in digits[:base]:
             raise ValueError(f"Invalid digit '{char}' for base {base}.")
         digit_value = digits.index(char)
-        print(f"result = {result} * {base} + {digit_value}")
         result = result * base + digit_value
     
     return str(-result) if is_negative else str(result)
