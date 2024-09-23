@@ -64,11 +64,13 @@ def is_greater(a: str, b: str, base: int) -> bool:
         return len(a) > len(b)
     
     for i in range(len(a)):
-        diff = subtractx(a[i], b[i], base)
-        if diff[0] == '-':
-            return False
-        if diff != '0':
-            return True
+        # diff = substraction(a[i], b[i], base)
+        # if diff[0] == '-':
+        #     return False
+        # if diff != '0':
+        #     return True
+        if a[i] != b[i]:
+            return a[i] > b[i]
 
     return False
 
@@ -141,7 +143,7 @@ def addition(x: str, y: str, base: int) -> str:
     for i in range(max_len - 1, -1, -1):
         total = carry + int(convert_to_base_10(x[i], base)) + int(convert_to_base_10(y[i], base))
         carry = total // base
-        result = symbols[int(modulus(str(total), str(base), base))] + result
+        result = symbols[total % base] + result
 
     if carry:
         result = symbols[carry] + result
@@ -182,7 +184,7 @@ def substraction(x: str, y: str, base: int) -> str:
     for i in range(max_len - 1, -1, -1):
         diff = int(convert_to_base_10(x[i], base)) - int(convert_to_base_10(y[i], base)) - carry
         carry = 1 if diff < 0 else 0
-        result = symbols[int(modulus(str(diff), str(base), base))] + result
+        result = symbols[diff % base] + result
 
     return result.lstrip('0') or '0'
 
@@ -257,7 +259,7 @@ def floor_div(x: str, y: str, base: int) -> str:
     temp = x
     result = '0'
     while is_greater(temp, y, base) or temp == y:
-        temp = subtractx(temp, y, base)
+        temp = substraction(temp, y, base)
         result = add(result, '1', base)
 
     return result
@@ -498,10 +500,6 @@ def add(a_str, b_str, base):
 
     return result_str
 
-
-
-
-
 def length(x, r):
     """
     Get length of string x in radix r.
@@ -511,7 +509,6 @@ def length(x, r):
         x = x[1:]
         k = addition(k, '1', r)
     return k
-
 
 def modulus_substract(x: str, y: str, mod: str, radix: int):
     if mod == "0":
@@ -589,8 +586,8 @@ def inversion(x: str, m: str, base: int) -> str:
 
         a, b = b, r
 
-        x0, x1 = x1, subtractx(x0, multiplication(q, x1, base), base)
-        y0, y1 = y1, subtractx(y0, multiplication(q, y1, base), base)
+        x0, x1 = x1, substraction(x0, multiplication(q, x1, base), base)
+        y0, y1 = y1, substraction(y0, multiplication(q, y1, base), base)
 
     if a != '1':
         return 'ERROR - inverse does not exist'
