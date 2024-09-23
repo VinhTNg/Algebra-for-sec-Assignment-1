@@ -10,13 +10,13 @@
 # Author names and student IDs:
 # Vinh Nguyen (1957104) 
 # Khoi Nguyen (1979388)
-# author_name_3 (author_student_ID_3)
+# Nam Mai (1959190)
 # author_name_4 (author_student_ID_4)
 ##
 
 # Import built-in json library for handling input/output 
 import json
-import fixedint
+#import fixedint
 import helper
 
 def gcdExtended(a: int, b: int) -> tuple[int, int, int]:
@@ -94,7 +94,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
     if exercise["type"] == "integer_arithmetic":
         # Check what operation within the integer arithmetic operations we need to solve
         if exercise["operation"] == "addition":
-            x =exercise["x"]
+            x = exercise["x"]
             y = exercise["y"]
             base = int(radix)
             answer["answer"] = add(x,y,base)
@@ -106,20 +106,22 @@ def solve_exercise(exercise_location : str, answer_location : str):
             y = helper.convert_to_base_10(exercise["y"], radix)
             answer["answer"] = convert_from_base_10(x - y, radix)
         elif exercise["operation"] == "multiplication_primary":
+            x = exercise["x"]
+            y = exercise["y"]
             # Solve integer arithmetic multiplication by primary school method
             x = helper.convert_to_base_10(exercise["x"], exercise["radix"]) # convert x in radix given in the exercise to base 10
-            y = helper.helper.convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
+            y = helper.convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
             
             # Check the negativity of the result
             isNegative = (x < 0) ^ (y < 0)  # XOR: True if only one of them is negative
             
             # Take absolute values for multiplication
-            x = abs(x)
-            y = abs(y)
+            int_x = abs(int(x))
+            int_y = abs(int(y))
             
             # Convert numbers to strings
-            x_str = str(x)
-            y_str = str(y)
+            x_str = str(int_x)
+            y_str = str(int_y)
             
             #Reverse both string 
             x_str = x_str[::-1]
@@ -174,25 +176,20 @@ def solve_exercise(exercise_location : str, answer_location : str):
             highX, lowX = int_x // (10**halfSize), int_x % (10**halfSize)
             highY, lowY = int_y // (10**halfSize), int_y % (10**halfSize)
 
-                # Recursive calls for the three products
-                firstPart = Karatsuba(highX, highY)                     # highX * highY
-                middlePart = Karatsuba((highX + lowX), (highY + lowY))  # (lowX + highX) * (lowY + highY)
-                lastPart = Karatsuba(lowX, lowY)                        # lowX * lowY
+            # Recursive calls for the three products
+            firstPart = highX * highY                    
+            middlePart = (highX + lowX) * (highY + lowY)
+            lastPart = lowX * lowY                       
 
-                # Karatsuba's formula to combine the products
-                result = (firstPart * 10**(2 * halfSize)) + ((middlePart - firstPart - lastPart) * 10**halfSize) + lastPart
-                result_str = str(result)
-                # Apply the negative sign if needed
-                if isNegative:
-                    result_str = '-' + result_str
-                answer = int(result_str)
-                return answer
+            # Karatsuba's formula to combine the products
+            result = (firstPart * 10**(2 * halfSize)) + ((middlePart - firstPart - lastPart) * 10**halfSize) + lastPart
+            result_str = str(result)
+            # Apply the negative sign if needed
+            if isNegative:
+                result_str = '-' + result_str
                 
-            # Solve integer arithmetic multiplication by Karatsuba method
-            x = helper.convert_to_base_10(exercise["x"], exercise["radix"]) # convert x in radix given in the exercise to base 10
-            y = helper.convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
-            
-            answer["answer"] = convert_from_base_10(Karatsuba(x, y), radix)
+            answer["answer"] = convert_from_base_10(int(result_str), radix)
+            pass
         elif exercise["operation"] == "extended_euclidean_algorithm":
             x = helper.convert_to_base_10(exercise["x"], radix)
             y = helper.convert_to_base_10(exercise["y"], radix)
@@ -271,8 +268,13 @@ def solve_exercise(exercise_location : str, answer_location : str):
             # Placeholder for future implementation
             pass
         
+<<<<<<< HEAD
         else:
-            raise ValueError(f"Unsupported operation: {exercise["operation"]}")
+            raise ValueError(f"Unsupported operation: {exercise['operation']}")
+=======
+        # else:
+            # raise ValueError(f"Unsupported operation: {exercise["operation"]}")
+>>>>>>> 8d93c4104de3d32e391c797d5fc1a5e8d688d3c1
     
     # Open file at answer_location for writing, creating the file if it does not exist yet
     # (and overwriting it if it does already exist).
@@ -280,4 +282,8 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
-solve_exercise("Exercises/exercise4.json", "answer.json")
+<<<<<<< HEAD
+#solve_exercise("Exercises/exercise4.json", "answer.json")
+=======
+solve_exercise("Exercises/exercise3.json", "answer.json")
+>>>>>>> d24f43d3f716377d31beb215d9d783f5fcf607c6
