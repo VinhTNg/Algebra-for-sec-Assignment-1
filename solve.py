@@ -253,9 +253,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
             y = exercise["y"]
 
             modulus = exercise["modulus"]
-            answer = helper.modulus_add(x,y,modulus,radix)
-
-            
+            answer = helper.modulus_add(x,y,modulus,radix)       
         
         elif exercise["operation"] == "subtraction":
             # Solve modular arithmetic subtraction exercise
@@ -265,11 +263,6 @@ def solve_exercise(exercise_location : str, answer_location : str):
             modulus = exercise["modulus"]
             answer = helper.modulus_substract(x,y,modulus,radix)
 
-
-        
-            
-            
-        
         elif exercise["operation"] == "multiplication":
             x = exercise["x"]
             y = exercise["y"]
@@ -278,9 +271,8 @@ def solve_exercise(exercise_location : str, answer_location : str):
         
         elif exercise["operation"] == "inversion":
             x = exercise["x"]
-            y = exercise["y"]
             modulus = exercise["modulus"]
-            answer = helper.inversion(x,y,modulus,radix)
+            answer = helper.inversion(x,modulus,radix)
         
         else:
             raise ValueError(f"Unsupported operation: {exercise['operation']}")
@@ -291,7 +283,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
-solve_exercise("Exercises/exercise12.json", "answer.json")
+solve_exercise("Exercises/exercise0.json", "answer.json")
 
 # x, y = '10', '3'
 # radix = 10 
