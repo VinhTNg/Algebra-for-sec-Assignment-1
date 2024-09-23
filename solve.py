@@ -358,9 +358,12 @@ def solve_exercise(exercise_location : str, answer_location : str):
         if exercise["operation"] == "reduction":
             # Solve modular arithmetic reduction exercise
             x = helper.convert_to_base_10(exercise["x"], radix)
-            modulus = helper.convert_to_base_10(exercise["modulus"], radix)
+            if exercise["modulus"][0] == "-":
+                modulus = helper.convert_to_base_10(exercise["modulus"][1:], radix)
+            else:
+                modulus = helper.convert_to_base_10(exercise["modulus"], radix)
 
-            if modulus == 0:
+            if modulus == "0":
                 answer["answer"] = None
             else:
                 while x > modulus:
@@ -372,9 +375,12 @@ def solve_exercise(exercise_location : str, answer_location : str):
             # Convert x, y, m to base 10
             x = helper.convert_to_base_10(exercise["x"], radix)
             y = helper.convert_to_base_10(exercise["y"], radix)
-            modulus = helper.convert_to_base_10(exercise["modulus"], radix)
+            if exercise["modulus"][0] == "-":
+                modulus = helper.convert_to_base_10(exercise["modulus"][1:], radix)
+            else:
+                modulus = helper.convert_to_base_10(exercise["modulus"], radix)
             
-            if modulus == 0:
+            if modulus == "0":
                 answer["answer"] = None
             else:
                 sum = x + y
