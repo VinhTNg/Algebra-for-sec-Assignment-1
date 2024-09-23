@@ -1,4 +1,29 @@
-symbols: list[str] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f']
+import solve
+
+def string_length(s: str) -> int:
+    """
+    Calculates the length of a string without using the built-in len()function.
+
+    :param s: The input string.
+    :type s: str
+    :return: The length of the string.
+    :rtype: int
+    """
+    # Base case: if the string is empty, return 0
+    if s == "":
+        return 0
+
+    # Recursive case: divide the string into two halves
+    mid = string_length(s) // 2
+    left_half = s[:mid]
+    right_half = s[mid:]
+
+    # Conquer: recursively calculate the length of each half
+    left_length = string_length(left_half)
+    right_length = string_length(right_half)
+
+    # Combine: sum the lengths of the two halves
+    return left_length + right_length
 
 def make_neg(num: str) -> str:
     """
@@ -32,10 +57,10 @@ def is_greater(a: str, b: str, base: int) -> bool:
     if a[0] == '-' and b[0] == '-':
         return not is_greater(a[1:], b[1:], base)
 
-    if len(a) != len(b):
-        return len(a) > len(b)
+    if string_length(a) != string_length(b):
+        return string_length(a) > string_length(b)
     
-    for i in range(len(a)):
+    for i in range(string_length(a)):
         diff = substraction(a[i], b[i], base)
         if diff[0] == '-':
             return False
@@ -57,7 +82,8 @@ def addition(x: str, y: str, base: int) -> str:
     :return: The sum of the two numbers.
     :rtype: str
     """
-    # Handle negative cases
+    symbols: list[str] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f']
+
     if x[0] == '-' and y[0] == '-':
         return make_neg(addition(make_neg(x), make_neg(y), base))
     if x[0] == '-':
@@ -65,7 +91,7 @@ def addition(x: str, y: str, base: int) -> str:
     if y[0] == '-':
         return substraction(x, make_neg(y), base)
 
-    max_len = max(len(x), len(y))
+    max_len = string_length(x) if is_greater(x, y, base) else string_length(y)
     x, y = x.zfill(max_len), y.zfill(max_len)
 
     carry = 0
@@ -118,7 +144,8 @@ def substraction(x: str, y: str, base: int) -> str:
     :return: The result of x - y.
     :rtype: str
     """
-    # Handle cases with negatives
+    symbols: list[str] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f']
+
     if x[0] == '-' and y[0] == '-':
         return substraction(make_neg(y), make_neg(x), base)
     if x[0] == '-':
@@ -126,10 +153,10 @@ def substraction(x: str, y: str, base: int) -> str:
     if y[0] == '-':
         return addition(x, make_neg(y), base)
 
-    if len(y) > len(x) or (len(x) == len(y) and is_greater(y, x, base)):
+    if string_length(y) > string_length(x) or (string_length(x) == string_length(y) and is_greater(y, x, base)):
         return make_neg(substraction(y, x, base))
 
-    max_len = max(len(x), len(y))
+    max_len = string_length(x) if string_length(x) > string_length(y) else string_length(y)
     x, y = x.zfill(max_len), y.zfill(max_len)
 
     carry = 0
@@ -179,6 +206,8 @@ def multiplication(x: str, y: str, base: int) -> str:
     :return: The product of the two numbers.
     :rtype: str
     """
+    symbols: list[str] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f']
+
     if x[0] == '-' and y[0] == '-':
         return multiplication(make_neg(x), make_neg(y), base)
     if x[0] == '-':
@@ -186,7 +215,7 @@ def multiplication(x: str, y: str, base: int) -> str:
     if y[0] == '-':
         return make_neg(multiplication(x, make_neg(y), base))
 
-    max_len = max(len(x), len(y))
+    max_len = string_length(x) if string_length(x) > string_length(y) else string_length(y)
     x, y = x.zfill(max_len), y.zfill(max_len)
 
     result = '0'
@@ -392,4 +421,52 @@ def test_subtraction(num_trials=100000):
 
 # Run the test function
 test_subtraction()
+
+
+def karatsuba(x: str, y: str, base: int) -> str:
+    """
+    Multiplies two numbers using the Karatsuba algorithm in a given base.
+
+    :param x: The first number.
+    :type x: str
+    :param y: The second number.
+    :type y: str
+    :param base: The base of the numbers.
+    :type base: int
+    :return: The product of the two numbers.
+    :rtype: str
+    """
+    if string_length(x) == 1 or string_length(y) == 1:
+        return multiplication(x, y, base)
+
+    max_len = string_length(x) if string_length(x) > string_length(y) else string_length(y)
+    if max_len % 2 != 0:
+        max_len += 1
+
+    x, y = x.zfill(max_len), y.zfill(max_len)
+    half_len = max_len // 2
+
+    x_low, x_high = x[:half_len], x[half_len:]
+    y_low, y_high = y[:half_len], y[half_len:]
+
+    high_product = karatsuba(x_high, y_high, base)
+    low_product = karatsuba(x_low, y_low, base)
+    cross_sum = substraction(
+        substraction(
+            karatsuba(addition(x_high, x_low, base), addition(y_high, y_low, base), base),
+            high_product, base),
+        low_product, base)
+
+    result = addition(addition(high_product + '0' * max_len, cross_sum + '0' * half_len, base), low_product, base)
+    return result
+
+def length(x, r):
+    """
+    Get length of string x in radix r.
+    """
+    k = '0'
+    while string_length(x) > 0:
+        x = x[1:]
+        k = addition(k, '1', r)
+    return k
 
