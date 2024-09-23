@@ -17,8 +17,7 @@
 # Import built-in json library for handling input/output 
 import json
 import fixedint
-
-
+import helper
 
 # support function addition part
 def padding(x, y):
@@ -292,7 +291,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
         if exercise["operation"] == "addition":
             x =exercise["x"]
             y = exercise["y"]
-            base = int(radix)
+            base = convert_to_base_10(radix)
             answer["answer"] = add(x,y,base)
             # Solve integer arithmetic addition exercise
             #pass
@@ -329,7 +328,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
                 for j in range(len(y_str)):
                     
                     # Multiply the digits and add to the corresponding position in results
-                    multiSingleDigit = int(x_str[i]) * int(y_str[j])
+                    multiSingleDigit = convert_to_base_10(x_str[i]) * convert_to_base_10(y_str[j])
                     results[i + j] += multiSingleDigit
             
                     # Handle carry if the result is more than 9
@@ -348,7 +347,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
             if isNegative:
                 result_str = '-' + result_str
     
-            answer = convert_from_base_10(int(result_str), radix)
+            answer = convert_from_base_10(convert_to_base_10(result_str), radix)
         elif exercise["operation"] == "multiplication_karatsuba":
             pass
         elif exercise["operation"] == "extended_euclidean_algorithm":
@@ -403,7 +402,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
                 x_32 = Int32(x)
                 y_32 = Int32(y)
                 modulus_32 = Int32(modulus)
-                subtraction_result = Int32((int(x_32) - int(y_32)) % int(modulus_32)).value
+                subtraction_result = Int32((convert_to_base_10(x_32) - convert_to_base_10(y_32)) % convert_to_base_10(modulus_32)).value
                 # subtraction_result = modular_subtraction(x, y, modulus)
                 if subtraction_result is None:
                     answer["answer"] = None
@@ -422,7 +421,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
                 x_32 = Int32(x)
                 y_32 = Int32(y)
                 modulus_32 = Int32(modulus)
-                multiplication_result = Int32((int(x_32) * int(y_32)) % int(modulus_32)).value
+                multiplication_result = Int32((convert_to_base_10(x_32) * convert_to_base_10(y_32)) % convert_to_base_10(modulus_32)).value
                 if multiplication_result is None:
                     answer["answer"] = None
                 else:
