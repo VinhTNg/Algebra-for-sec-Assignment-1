@@ -16,7 +16,6 @@
 
 # Import built-in json library for handling input/output 
 import json
-import fixedint
 
 
 
@@ -190,16 +189,6 @@ def gcdExtended(a: int, b: int) -> tuple[int, int, int]:
 
     return gcd, x, y
 
-# Define a 32-bit integer type using fixedint
-Int32 = fixedint.Int32
-
-# Define the Int32 class
-class Int32:
-    def __init__(self, value):
-        self.value = value & 0xFFFFFFFF  # Ensure it's a 32-bit integer
-
-    def __int__(self):
-        return self.value
 
 def convert_to_base_10(number: str, base: int) -> int:
     """
@@ -380,7 +369,6 @@ def solve_exercise(exercise_location : str, answer_location : str):
                 # Apply the negative sign if needed
                 if isNegative:
                     result_str = '-' + result_str
-                
                 answer = int(result_str)
                 return answer
                 
@@ -388,8 +376,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
             x = convert_to_base_10(exercise["x"], exercise["radix"]) # convert x in radix given in the exercise to base 10
             y = convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
             
-            answer = convert_from_base_10(Karatsuba(x, y), radix)
-            pass
+            answer["answer"] = convert_from_base_10(Karatsuba(x, y), radix)
         elif exercise["operation"] == "extended_euclidean_algorithm":
             x = convert_to_base_10(exercise["x"], radix)
             y = convert_to_base_10(exercise["y"], radix)
@@ -407,11 +394,11 @@ def solve_exercise(exercise_location : str, answer_location : str):
             if modulus == 0:
                 answer["answer"] = None
             else:
-                # Convert to 32-bit integer
-                x_32 = Int32(x)
-                modulus_32 = Int32(modulus)
-                reduction_result = Int32(x_32.int % modulus_32.int).int
-                answer["answer"] = convert_from_base_10(reduction_result, radix)
+                if modulus < 0:
+                    modulus = -modulus
+                while x > modulus:
+                    x -= modulus
+                answer["answer"] = convert_from_base_10(x, radix)
         
         elif exercise["operation"] == "addition":
             # Solve modular arithmetic addition exercise
@@ -423,19 +410,12 @@ def solve_exercise(exercise_location : str, answer_location : str):
             if modulus == 0:
                 answer["answer"] = None
             else:
-                # Convert to 32-bit integers
-                x_32 = Int32(x)
-                y_32 = Int32(y)
-                modulus_32 = Int32(modulus)
-                x = int(x_32)
-                y = int(y_32)
-                modulus = int(modulus_32)
+                if modulus < 0:
+                    modulus = -modulus
                 sum = x + y
                 while sum > modulus:
                     sum -= modulus
                 answer["answer"] = convert_from_base_10(sum, radix)
-                # addition_result = Int32((int(x_32) + int(y_32)) % int(modulus_32))
-                # answer["answer"] = convert_from_base_10(int(addition_result), radix)
         
         elif exercise["operation"] == "subtraction":
             # Solve modular arithmetic subtraction exercise
@@ -446,10 +426,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
             if modulus == 0:
                 answer["answer"] = None
             else:
-                x_32 = Int32(x)
-                y_32 = Int32(y)
-                modulus_32 = Int32(modulus)
-                subtraction_result = Int32((int(x_32) - int(y_32)) % int(modulus_32)).value
+                subtraction_result = (x - y) % modulus
                 # subtraction_result = modular_subtraction(x, y, modulus)
                 if subtraction_result is None:
                     answer["answer"] = None
@@ -465,10 +442,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
             if modulus == 0:
                 answer["answer"] = None
             else:
-                x_32 = Int32(x)
-                y_32 = Int32(y)
-                modulus_32 = Int32(modulus)
-                multiplication_result = Int32((int(x_32) * int(y_32)) % int(modulus_32)).value
+                multiplication_result = (x * y) % modulus
                 if multiplication_result is None:
                     answer["answer"] = None
                 else:
@@ -488,4 +462,4 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
-solve_exercise("Exercises/exercise3.json", "answer.json")
+solve_exercise("Exercises/exercise4.json", "answer.json")
