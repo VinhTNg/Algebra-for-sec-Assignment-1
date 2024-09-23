@@ -301,9 +301,6 @@ def solve_exercise(exercise_location : str, answer_location : str):
             x = convert_to_base_10(exercise["x"], radix)
             y = convert_to_base_10(exercise["y"], radix)
             answer["answer"] = convert_from_base_10(x - y, radix)
-            #pass
-        # et cetera
-        
         elif exercise["operation"] == "multiplication_primary":
             # Solve integer arithmetic multiplication by primary school method
             x = convert_to_base_10(exercise["x"], exercise["radix"]) # convert x in radix given in the exercise to base 10
@@ -352,8 +349,15 @@ def solve_exercise(exercise_location : str, answer_location : str):
                 result_str = '-' + result_str
     
             answer = convert_from_base_10(int(result_str), radix)
-            
-        
+        elif exercise["operation"] == "multiplication_karatsuba":
+            pass
+        elif exercise["operation"] == "extended_euclidean_algorithm":
+            x = convert_to_base_10(exercise["x"], radix)
+            y = convert_to_base_10(exercise["y"], radix)
+            gcd, a, b = gcdExtended(x, y)
+            answer["answer-a"] = convert_from_base_10(a, radix)
+            answer["answer-b"] = convert_from_base_10(b, radix)
+            answer["answer-gcd"] = convert_from_base_10(gcd, radix)
     else:  # exercise["type"] == "modular_arithmetic"
         # Check what operation within the modular arithmetic operations we need to solve
         if exercise["operation"] == "reduction":
@@ -438,4 +442,4 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
-solve_exercise("Exercises/exercise6.json", "answer.json")
+solve_exercise("Exercises/exercise11.json", "answer.json")
