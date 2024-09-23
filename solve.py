@@ -247,7 +247,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
     if exercise["type"] == "integer_arithmetic":
         # Check what operation within the integer arithmetic operations we need to solve
         if exercise["operation"] == "addition":
-            x =exercise["x"]
+            x = exercise["x"]
             y = exercise["y"]
             base = int(radix)
             answer["answer"] = add(x,y,base)
@@ -259,20 +259,23 @@ def solve_exercise(exercise_location : str, answer_location : str):
             y = helper.convert_to_base_10(exercise["y"], radix)
             answer["answer"] = convert_from_base_10(x - y, radix)
         elif exercise["operation"] == "multiplication_primary":
+            x = exercise["x"]
+            y = exercise["y"]
             # Solve integer arithmetic multiplication by primary school method
             x = helper.convert_to_base_10(exercise["x"], exercise["radix"]) # convert x in radix given in the exercise to base 10
-            y = helper.helper.convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
+            y = helper.convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
             
             # Check the negativity of the result
-            isNegative = (x < 0) ^ (y < 0)  # XOR: True if only one of them is negative
+            if x.startswith("-") ^ y.startswith("-"):
+                isNegative = True
             
             # Take absolute values for multiplication
-            x = abs(x)
-            y = abs(y)
+            int_x = abs(int(x))
+            int_y = abs(int(y))
             
             # Convert numbers to strings
-            x_str = str(x)
-            y_str = str(y)
+            x_str = str(int_x)
+            y_str = str(int_y)
             
             #Reverse both string 
             x_str = x_str[::-1]
@@ -304,22 +307,22 @@ def solve_exercise(exercise_location : str, answer_location : str):
             # Apply the negative sign if needed
             if isNegative:
                 result_str = '-' + result_str
-    
+                
             answer["answer"] = convert_from_base_10(int(result_str), radix)
+            
         elif exercise["operation"] == "multiplication_karatsuba":
             # Solve integer arithmetic multiplication by Karatsuba method
             x = helper.convert_to_base_10(exercise["x"], exercise["radix"]) # convert x in radix given in the exercise to base 10
             y = helper.convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
             # Check the negativity of the result
-            isNegative = (x < 0) ^ (y < 0)  # XOR: True if only one of them is negative
-            # Base case for recursion: if either x or y is a single digit number
-            if x < 10 or y < 10:
-                answer = x * y
-            # Check the negativity of the result
-            isNegative = (x < 0) ^ (y < 0)  # XOR: True if only one of them is negative
+            if x.startswith("-") ^ y.startswith("-"):
+                isNegative = True           
             # Get the absolute values
-            x = abs(x)
-            y = abs(y)
+            int_x = abs(int(x))
+            int_y = abs(int(y))
+            # Base case for recursion: if either x or y is a single digit number
+            if int_x < 10 or int_y < 10:
+                answer = int_x * int_y
             # Convert numbers to strings
             x_str = str(x)
             y_str = str(y)
@@ -328,8 +331,8 @@ def solve_exercise(exercise_location : str, answer_location : str):
             halfSize = maxSize // 2
 
             # Split x and y into two halves
-            highX, lowX = x // (10**halfSize), x % (10**halfSize)
-            highY, lowY = y // (10**halfSize), y % (10**halfSize)
+            highX, lowX = int_x // (10**halfSize), int_x % (10**halfSize)
+            highY, lowY = int_y // (10**halfSize), int_y % (10**halfSize)
 
             # Recursive calls for the three products
             firstPart = highX * highY                    
@@ -421,8 +424,13 @@ def solve_exercise(exercise_location : str, answer_location : str):
             # Placeholder for future implementation
             pass
         
+<<<<<<< HEAD
         else:
             raise ValueError(f"Unsupported operation: {exercise['operation']}")
+=======
+        # else:
+            # raise ValueError(f"Unsupported operation: {exercise["operation"]}")
+>>>>>>> 8d93c4104de3d32e391c797d5fc1a5e8d688d3c1
     
     # Open file at answer_location for writing, creating the file if it does not exist yet
     # (and overwriting it if it does already exist).
