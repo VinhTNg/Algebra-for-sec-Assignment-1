@@ -300,4 +300,4 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
-solve_exercise("Exercises/exercise3.json", "answer.json")
+solve_exercise("Exercises/exercise2.json", "answer.json")

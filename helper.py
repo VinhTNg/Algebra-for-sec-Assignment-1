@@ -511,46 +511,6 @@ def add(a_str, b_str, base):
 
 
 
-
-
-
-def karatsuba(x: str, y: str, base: int) -> str:
-    """
-    Multiplies two numbers using the Karatsuba algorithm in a given base.
-
-    :param x: The first number.
-    :type x: str
-    :param y: The second number.
-    :type y: str
-    :param base: The base of the numbers.
-    :type base: int
-    :return: The product of the two numbers.
-    :rtype: str
-    """
-    if len(x) == 1 or len(y) == 1:
-        return multiplication(x, y, base)
-
-    max_len = len(x) if len(x) > len(y) else len(y)
-    if max_len % 2 != 0:
-        max_len += 1
-
-    x, y = x.zfill(max_len), y.zfill(max_len)
-    half_len = max_len // 2
-
-    x_low, x_high = x[:half_len], x[half_len:]
-    y_low, y_high = y[:half_len], y[half_len:]
-
-    high_product = karatsuba(x_high, y_high, base)
-    low_product = karatsuba(x_low, y_low, base)
-    cross_sum = substraction(
-        substraction(
-            karatsuba(addition(x_high, x_low, base), addition(y_high, y_low, base), base),
-            high_product, base),
-        low_product, base)
-
-    result = addition(addition(high_product + '0' * max_len, cross_sum + '0' * half_len, base), low_product, base)
-    return result
-
 def length(x, r):
     """
     Get length of string x in radix r.
@@ -566,60 +526,22 @@ def modulus_substract(x: str, y: str, mod: str, radix: int):
     if mod == "0":
         return None
     z = subtractx(x, y, radix)  # x - y mod
-    if "-" not in z:
-        
-        last_valid_z = z  # keep track of the last valid result
-        while "-" not in z:
-            last_valid_z = z  # update last valid result
-            z = subtractx(z, mod, radix)  # subtract mod
-        return last_valid_z  # return the last valid z before negative
-    if "-" in z:
-        while "-" in z:
-             z = add(z, mod, radix)
-        return z
+    last_valid_z = z  # keep track of the last valid result
+    while "-" not in z:
+        last_valid_z = z  # update last valid result
+        z = subtractx(z, mod, radix)  # subtract mod
+    return last_valid_z  # return the last valid z before negative
 
 
 def modulus_add(x: str, y: str, mod: str, radix: int):
-    if mod == "0":
+    if mod =="0":
         return None
-    
-    z = add(x, y, radix)  # Add x and y
-    
-    # If z is non-negative, subtract mod until z becomes negative
-    if "-" not in z:
-        last_valid_z = z  # Keep track of the last valid result
-        while "-" not in z:
-            last_valid_z = z  # Update the last valid result
-            z = subtractx(z, mod, radix)  # Subtract mod
-        return last_valid_z  # Return the last valid z before it turns negative
-    
-    # If z is negative, add mod until z becomes non-negative
-    else:
-        while "-" in z:
-            z = add(z, mod, radix)  # Add mod to bring z into non-negative range
-        return z
-    
-def modulus_red(x: str, mod: str, radix: int):
-    if mod == "0":
-        return None
-    
-    # If x is non-negative, subtract mod until x is less than mod
-    if "-" not in x:
-        last_valid_x = x  # Track the last valid result
-        while "-" not in subtractx(x, mod, radix):  # While x >= mod
-            last_valid_x = subtractx(x, mod, radix)
-            x = last_valid_x
-        return last_valid_x
-    
-    # If x is negative, add mod until x becomes non-negative (keeping the sign)
-    else:
-        while "-" in x:
-            x = add(x, mod, radix)  # Add mod directly to x, keeping the sign intact
-        return x
+    z = add(x, y, radix)
+    last_valid_z = z  # keep track of the last valid result
 
-    
+    while "-" not in z:
+        last_valid_z = z  # update last valid result
+        z = subtractx(z, mod, radix)  # subtract mod
+    return last_valid_z  # return the last valid z before negative
 
-    
-    
-print(floor_div("100000000","2",10))
 #print(subtractx("1000000000000000000","-1",10))
