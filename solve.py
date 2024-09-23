@@ -10,7 +10,7 @@
 # Author names and student IDs:
 # Vinh Nguyen (1957104) 
 # Khoi Nguyen (1979388)
-# author_name_3 (author_student_ID_3)
+# Nam Mai (1959190)
 # author_name_4 (author_student_ID_4)
 ##
 
@@ -307,45 +307,44 @@ def solve_exercise(exercise_location : str, answer_location : str):
     
             answer["answer"] = convert_from_base_10(int(result_str), radix)
         elif exercise["operation"] == "multiplication_karatsuba":
-            def Karatsuba(x, y):
-                # Base case for recursion: if either x or y is a single digit number
-                if x < 10 or y < 10:
-                    answer = x * y
-                # Check the negativity of the result
-                isNegative = (x < 0) ^ (y < 0)  # XOR: True if only one of them is negative
-                # Get the absolute values
-                x = abs(x)
-                y = abs(y)
-                # Convert numbers to strings
-                x_str = str(x)
-                y_str = str(y)
-                # Calculates the size of the numbers
-                maxSize = max(len(x_str), len(y_str))
-                halfSize = maxSize // 2
-
-                # Split x and y into two halves
-                highX, lowX = x // (10**halfSize), x % (10**halfSize)
-                highY, lowY = y // (10**halfSize), y % (10**halfSize)
-
-                # Recursive calls for the three products
-                firstPart = Karatsuba(highX, highY)                     # highX * highY
-                middlePart = Karatsuba((highX + lowX), (highY + lowY))  # (lowX + highX) * (lowY + highY)
-                lastPart = Karatsuba(lowX, lowY)                        # lowX * lowY
-
-                # Karatsuba's formula to combine the products
-                result = (firstPart * 10**(2 * halfSize)) + ((middlePart - firstPart - lastPart) * 10**halfSize) + lastPart
-                result_str = str(result)
-                # Apply the negative sign if needed
-                if isNegative:
-                    result_str = '-' + result_str
-                answer = int(result_str)
-                return answer
-                
             # Solve integer arithmetic multiplication by Karatsuba method
             x = helper.convert_to_base_10(exercise["x"], exercise["radix"]) # convert x in radix given in the exercise to base 10
             y = helper.convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
-            
-            answer["answer"] = convert_from_base_10(Karatsuba(x, y), radix)
+            # Check the negativity of the result
+            isNegative = (x < 0) ^ (y < 0)  # XOR: True if only one of them is negative
+            # Base case for recursion: if either x or y is a single digit number
+            if x < 10 or y < 10:
+                answer = x * y
+            # Check the negativity of the result
+            isNegative = (x < 0) ^ (y < 0)  # XOR: True if only one of them is negative
+            # Get the absolute values
+            x = abs(x)
+            y = abs(y)
+            # Convert numbers to strings
+            x_str = str(x)
+            y_str = str(y)
+            # Calculates the size of the numbers
+            maxSize = max(len(x_str), len(y_str))
+            halfSize = maxSize // 2
+
+            # Split x and y into two halves
+            highX, lowX = x // (10**halfSize), x % (10**halfSize)
+            highY, lowY = y // (10**halfSize), y % (10**halfSize)
+
+            # Recursive calls for the three products
+            firstPart = highX * highY                    
+            middlePart = (highX + lowX) * (highY + lowY)
+            lastPart = lowX * lowY                       
+
+            # Karatsuba's formula to combine the products
+            result = (firstPart * 10**(2 * halfSize)) + ((middlePart - firstPart - lastPart) * 10**halfSize) + lastPart
+            result_str = str(result)
+            # Apply the negative sign if needed
+            if isNegative:
+                result_str = '-' + result_str
+                
+            answer["answer"] = convert_from_base_10(int(result_str), radix)
+            pass
         elif exercise["operation"] == "extended_euclidean_algorithm":
             x = helper.convert_to_base_10(exercise["x"], radix)
             y = helper.convert_to_base_10(exercise["y"], radix)
@@ -431,4 +430,8 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
+<<<<<<< HEAD
 #solve_exercise("Exercises/exercise4.json", "answer.json")
+=======
+solve_exercise("Exercises/exercise3.json", "answer.json")
+>>>>>>> d24f43d3f716377d31beb215d9d783f5fcf607c6
