@@ -202,3 +202,194 @@ def multiplication(x: str, y: str, base: int) -> str:
         result = addition(result + '0' * i, temp_result, base)
 
     return result
+
+
+import random
+
+def subtractx(a_str, b_str, base):
+    def create(base):
+        mp = {10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F'}
+        digits = [mp[i] if i in mp else str(i) for i in range(base)]
+        return digits
+
+    def padding(x, y):
+        x = str(x)
+        y = str(y)
+        while len(x) < len(y):
+            x = '0' + x
+        while len(y) < len(x):
+            y = '0' + y
+        return x, y
+
+    def compare_numbers(a_str, b_str, basenum):
+        # Compare two numbers represented as strings
+        for a_digit, b_digit in zip(a_str, b_str):
+            index_a = basenum.index(a_digit)
+            index_b = basenum.index(b_digit)
+            if index_a > index_b:
+                return 1  # a_str > b_str
+            elif index_a < index_b:
+                return -1  # a_str < b_str
+        return 0  # a_str == b_str
+
+    def digit_subtract(a_digit, b_digit, borrow, basenum):
+        # Subtract two digits along with borrow
+        index_a = basenum.index(a_digit)
+        index_b = basenum.index(b_digit)
+        index_borrow = borrow
+
+        # Adjust index_b with borrow
+        index_b += index_borrow
+
+        if index_a >= index_b:
+            index_diff = index_a - index_b
+            borrow_out = 0
+        else:
+            index_diff = index_a + len(basenum) - index_b
+            borrow_out = 1
+
+        diff_digit = basenum[index_diff]
+        return diff_digit, borrow_out
+
+    # Handle negative inputs
+    negative_a = False
+    negative_b = False
+
+    if a_str.startswith('-'):
+        negative_a = True
+        a_str = a_str[1:]
+    if b_str.startswith('-'):
+        negative_b = True
+        b_str = b_str[1:]
+
+    basenum = create(base)
+    a_str, b_str = padding(a_str, b_str)
+
+    # Determine operation based on the signs of a and b
+    if negative_a and negative_b:
+        # (-a) - (-b) = b - a
+        result = subtractx(b_str, a_str, base)
+    elif negative_a and not negative_b:
+        # (-a) - b = -(a + b)
+        result = add(a_str, b_str, base)
+        result = '-' + result
+    elif not negative_a and negative_b:
+        # a - (-b) = a + b
+        result = add(a_str, b_str, base)
+    else:
+        # a - b
+        comparison = compare_numbers(a_str, b_str, basenum)
+        if comparison == 0:
+            return '0'
+        elif comparison < 0:
+            # If a < b, swap and remember to add negative sign later
+            a_str, b_str = b_str, a_str
+            negative_result = True
+        else:
+            negative_result = False
+
+        result_digits = []
+        borrow = 0  # Use integer for borrow
+
+        # Process digits from least significant to most significant
+        for i in range(len(a_str) - 1, -1, -1):
+            a_digit = a_str[i]
+            b_digit = b_str[i]
+
+            # Use digit_subtract to compute the digit difference and new borrow
+            diff_digit, borrow = digit_subtract(a_digit, b_digit, borrow, basenum)
+
+            result_digits.insert(0, diff_digit)
+
+        # Remove leading zeros from the result
+        while len(result_digits) > 1 and result_digits[0] == '0':
+            del result_digits[0]
+
+        result_str = ''.join(result_digits)
+        if negative_result:
+            result_str = '-' + result_str
+        result = result_str
+
+    return result
+
+def add(a_str, b_str, base):
+    # Function to perform addition without using '+' or '%'
+    def create(base):
+        mp = {10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F'}
+        digits = [mp[i] if i in mp else str(i) for i in range(base)]
+        return digits
+
+    def padding(x, y):
+        x = str(x)
+        y = str(y)
+        while len(x) < len(y):
+            x = '0' + x
+        while len(y) < len(x):
+            y = '0' + y
+        return x, y
+
+    basenum = create(base)
+    a_str, b_str = padding(a_str, b_str)
+
+    result_digits = []
+    carry = 0  # Use integer for carry
+
+    # Process digits from least significant to most significant
+    for i in range(len(a_str) -1, -1, -1):
+        a_digit = a_str[i]
+        b_digit = b_str[i]
+
+        # Sum digits without using '+'
+        index_a = basenum.index(a_digit)
+        index_b = basenum.index(b_digit)
+        index_carry = carry
+
+        total = index_a + index_b + index_carry
+
+        # Determine new carry
+        if total >= len(basenum):
+            carry = 1
+            total -= len(basenum)
+        else:
+            carry = 0
+
+        # Append result digit
+        result_digits.insert(0, basenum[total])
+
+    if carry == 1:
+        result_digits.insert(0, '1')
+
+    # Remove leading zeros
+    while len(result_digits) > 1 and result_digits[0] == '0':
+        del result_digits[0]
+
+    result_str = ''.join(result_digits)
+    return result_str
+
+def test_subtraction(num_trials=100000):
+    for _ in range(num_trials):
+        # Generate random numbers a and b in the range (-10**500, 10**500)
+        a = random.randint(-10**500, 10**500)
+        b = random.randint(-10**500, 10**500)
+
+        # Convert numbers to strings
+        a_str = str(a)
+        b_str = str(b)
+
+        # Perform subtraction using our function
+        result = subtractx(a_str, b_str, 10)
+
+        # Compute expected result using Python's built-in subtraction
+        expected = str(a - b)
+
+        # Compare results
+        if result != expected:
+            print(f"Test failed for a={a_str}, b={b_str}")
+            print(f"Expected: {expected}, Got: {result}")
+            return
+
+    print(f"All {num_trials} tests passed successfully!")
+
+# Run the test function
+test_subtraction()
+
