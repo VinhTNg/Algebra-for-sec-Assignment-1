@@ -290,6 +290,46 @@ def solve_exercise(exercise_location : str, answer_location : str):
             # Solve integer arithmetic subtraction exercise
             pass
         # et cetera
+        
+        elif exercise["operation"] == "multiplication_primary":
+            # Check the negativity of the result
+            isNegative = (x < 0) ^ (y < 0)  # XOR: True if only one of them is negative
+            # Solve integer arithmetic multiplication by primary school method
+            x = convert_to_base_10(exercise["x"], exercise["radix"]) # convert x in radix given in the exercise to base 10
+            y = convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
+            # Convert numbers to strings
+            x_str = str(x)
+            y_str = str(y)
+            #Reverse both string 
+            x_str = x_str[::-1]
+            y_str = y_str[::-1]
+            # Initialize a list to store the intermediate results
+            results = [0] * (len(x_str) + len(y_str))
+            # Perform the multiplication digit by digit
+            for i in range(len(x_str)):
+                for j in range(len(y_str)):
+                    # Multiply the digits and add to the corresponding position in results
+                    multiSingleDigit = int(x_str[i]) * int(y_str[j])
+                    results[i + j] += multiSingleDigit
+            
+                    # Handle carry if the result is more than 9
+                    if results[i + j] >= 10:
+                        results[i + j + 1] += results[i + j] // 10
+                        results[i + j] %= 10
+    
+            # Remove leading zeros from the results
+            while len(results) > 1 and results[-1] == 0:
+                results.pop()
+    
+            # Convert the results list back into a number
+            result_str = ''.join(map(str, results[::-1]))
+            
+            # Apply the negative sign if needed
+            if isNegative:
+                result_str = '-' + result_str
+    
+            return result_str
+        
     else:  # exercise["type"] == "modular_arithmetic"
         # Check what operation within the modular arithmetic operations we need to solve
         if exercise["operation"] == "reduction":
