@@ -34,12 +34,13 @@ def gcdExtended(a: int, b: int) -> tuple[int, int, int]:
 
     return gcd, x, y
 
-def convert_from_base_10(number: int, base: int) -> str:
+def convert_from_base_10(number: str, base: int) -> str:
     """
-    Manually converts a decimal (base-10) number to the target base (between 2 and 16).
+    Converts a decimal (base-10) number to the target base (between 2 and 16) 
+    without converting the number to an integer type.
     
     Parameters:
-    number (int): The decimal number to convert.
+    number (str): The decimal number as a string.
     base (int): The base to convert to (between 2 and 16).
     
     Returns:
@@ -50,20 +51,36 @@ def convert_from_base_10(number: int, base: int) -> str:
     
     digits = "0123456789ABCDEF"
     
-    if number == 0:
+    # Check for negative number
+    is_negative = number.startswith('-')
+    if is_negative:
+        number = number[1:]
+
+    # Handle zero case
+    if number == "0":
         return "0"
     
-    is_negative = False
-    if number < 0:
-        is_negative = True
-        number = -number
-    
     result = ""
-    while number > 0:
-        remainder = number % base
-        result = digits[remainder] + result
-        number = number // base
     
+    # While the number is greater than 0
+    while number != "0":
+        # Calculate the remainder
+        remainder = str(int(number) % base)  # Convert to int only for modulus
+        result = digits[int(remainder)] + result
+        
+        # Perform floor division and update the number
+        quotient = ""
+        temp = 0
+        for char in number:
+            temp = temp * 10 + int(char)
+            if temp >= base:
+                quotient += str(temp // base)
+                temp = temp % base
+            elif quotient:  # avoid leading zeros
+                quotient += '0'
+        
+        number = quotient if quotient else "0"
+
     return "-" + result if is_negative else result
 
 def solve_exercise(exercise_location : str, answer_location : str):
@@ -113,8 +130,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
             y = helper.convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
             
             # Check the negativity of the result
-            if x.startswith("-") ^ y.startswith("-"):
-                isNegative = True
+            isNegative = (x < 0) ^ (y < 0)  # XOR: True if only one of them is negative
             
             # Take absolute values for multiplication
             int_x = abs(int(x))
@@ -154,28 +170,24 @@ def solve_exercise(exercise_location : str, answer_location : str):
             # Apply the negative sign if needed
             if isNegative:
                 result_str = '-' + result_str
-                
+    
             answer["answer"] = convert_from_base_10(int(result_str), radix)
-            
         elif exercise["operation"] == "multiplication_karatsuba":
-            # Solve integer arithmetic multiplication by Karatsuba method
-            x = helper.convert_to_base_10(exercise["x"], exercise["radix"]) # convert x in radix given in the exercise to base 10
-            y = helper.convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
-            # Check the negativity of the result
-            if x.startswith("-") ^ y.startswith("-"):
-                isNegative = True           
-            # Get the absolute values
-            int_x = abs(int(x))
-            int_y = abs(int(y))
-            # Base case for recursion: if either x or y is a single digit number
-            if int_x < 10 or int_y < 10:
-                answer = int_x * int_y
-            # Convert numbers to strings
-            x_str = str(x)
-            y_str = str(y)
-            # Calculates the size of the numbers
-            maxSize = max(len(x_str), len(y_str))
-            halfSize = maxSize // 2
+            def Karatsuba(x, y):
+                # Base case for recursion: if either x or y is a single digit number
+                if x < 10 or y < 10:
+                    answer = x * y
+                # Check the negativity of the result
+                isNegative = (x < 0) ^ (y < 0)  # XOR: True if only one of them is negative
+                # Get the absolute values
+                x = abs(x)
+                y = abs(y)
+                # Convert numbers to strings
+                x_str = str(x)
+                y_str = str(y)
+                # Calculates the size of the numbers
+                maxSize = max(len(x_str), len(y_str))
+                halfSize = maxSize // 2
 
             # Split x and y into two halves
             highX, lowX = int_x // (10**halfSize), int_x % (10**halfSize)
@@ -207,15 +219,16 @@ def solve_exercise(exercise_location : str, answer_location : str):
         if exercise["operation"] == "reduction":
             # Solve modular arithmetic reduction exercise
             x = helper.convert_to_base_10(exercise["x"], radix)
-            modulus = helper.convert_to_base_10(exercise["modulus"], radix)
+            if exercise["modulus"].startswith("-"):
+                modulus = helper.convert_to_base_10(exercise["modulus"][1:], radix)
+            else:
+                modulus = helper.convert_to_base_10(exercise["modulus"], radix)
 
-            if modulus == 0:
+            if modulus == "0":
                 answer["answer"] = None
             else:
-                if modulus < 0:
-                    modulus = -modulus
                 while x > modulus:
-                    x -= modulus
+                    sum = helper.substraction(x, modulus, 10)
                 answer["answer"] = convert_from_base_10(x, radix)
         
         elif exercise["operation"] == "addition":

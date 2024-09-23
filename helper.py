@@ -1,5 +1,4 @@
-
-def string_length(s: str) -> int:
+def convert_to_base_10(number: str, base: int) -> str:
     """
     Manually converts a number in a given base to base 10 (decimal) and returns it as a string.
 
@@ -28,6 +27,36 @@ def string_length(s: str) -> int:
         result = result * base + digit_value
     
     return str(-result) if is_negative else str(result)
+
+def string_length(s: str) -> int:
+    """
+    Manually converts a number in a given base to base 10 (decimal) and returns it as a string.
+
+    Parameters:
+    number (str): The number in the given base as a string.
+    base (int): The base of the input number (between 2 and 16).
+
+    Returns:
+    str: The number converted to base 10 as a string.
+    """
+    if base < 2 or base > 16:
+        raise ValueError("Base must be between 2 and 16 (inclusive).")
+    
+    digits = "0123456789ABCDEF"
+    number = number.upper()
+    is_negative = False
+    if number.startswith('-'):
+        is_negative = True
+        number = number[1:]
+    
+    result = "0"
+    for char in number:
+        if char not in digits[:base]:
+            raise ValueError(f"Invalid digit '{char}' for base {base}.")
+        digit_value = digits.index(char)
+        result = addition(str(multiplication(result, str(base), base)), digit_value)
+    
+    return "-" + result if is_negative else result
 
 def make_neg(num: str) -> str:
     """
@@ -233,6 +262,42 @@ def multiplication(x: str, y: str, base: int) -> str:
         if carry:
             temp_result = symbols[carry] + temp_result
         result = addition(result + '0' * i, temp_result, base)
+
+    return result
+
+def floor_div(x: str, y: str, base: int) -> str:
+    """
+    Divides the first number by the second and returns the floor of the result.
+
+    :param x: The dividend.
+    :type x: str
+    :param y: The divisor.
+    :type y: str
+    :param base: The base of the numbers.
+    :type base: int
+    :return: The floor of x / y.
+    :rtype: str
+    """
+    if y == '0':
+        raise ValueError("Cannot divide by zero.")
+    
+    if x[0] == '-' and y[0] == '-':
+        return floor_div(make_neg(x), make_neg(y), base)
+    if x[0] == '-':
+        return make_neg(floor_div(make_neg(x), y, base))
+    if y[0] == '-':
+        return make_neg(floor_div(x, make_neg(y), base))
+
+    if is_greater(y, x, base):
+        return '0'
+    if x == y:
+        return '1'
+
+    temp = x
+    result = '0'
+    while is_greater(temp, y, base) or temp == y:
+        temp = substraction(temp, y, base)
+        result = addition(result, '1', base)
 
     return result
 
