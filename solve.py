@@ -227,9 +227,8 @@ def solve_exercise(exercise_location : str, answer_location : str):
             modulus = exercise["modulus"]
             base = int(radix)
             # Keep reducing x until it is smaller than the modulus
-            while helper.is_greater(x, modulus, base) or x == modulus:
-                x = helper.subtractx(x, modulus, base)
-            answer["answer"] = x
+            
+            answer["answer"] = helper.modulus_red(x,modulus,radix)
 
             # x = helper.convert_to_base_10(exercise["x"], radix)
             # if exercise["modulus"].startswith("-"):
