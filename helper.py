@@ -544,4 +544,21 @@ def modulus_add(x: str, y: str, mod: str, radix: int):
         z = subtractx(z, mod, radix)  # subtract mod
     return last_valid_z  # return the last valid z before negative
 
+def modulus_red(x: str, mod: str, radix: int):
+    if mod == "0":
+        return None
+    
+    # If x is non-negative, subtract mod until x is less than mod
+    if "-" not in x:
+        last_valid_x = x  # Track the last valid result
+        while "-" not in subtractx(x, mod, radix):  # While x >= mod
+            last_valid_x = subtractx(x, mod, radix)
+            x = last_valid_x
+        return last_valid_x
+    
+    # If x is negative, add mod until x becomes non-negative (keeping the sign)
+    else:
+        while "-" in x:
+            x = add(x, mod, radix)  # Add mod directly to x, keeping the sign intact
+        return x
 #print(subtractx("1000000000000000000","-1",10))

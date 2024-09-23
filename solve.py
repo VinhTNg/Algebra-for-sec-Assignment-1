@@ -25,7 +25,7 @@ def gcdExtended(a: int, b: int) -> tuple[int, int, int]:
     if a == 0:
         return b, 0, 1
 
-    gcd, x1, y1 = gcdExtended(max(b,a) % min(b,a), min(b,a))
+    gcd, x1, y1 = gcdExtended(b%a, a)
 
     # Update x and y using results of recursive
     # call
@@ -214,10 +214,10 @@ def solve_exercise(exercise_location : str, answer_location : str):
         elif exercise["operation"] == "extended_euclidean_algorithm":
             x = helper.convert_to_base_10(exercise["x"], radix)
             y = helper.convert_to_base_10(exercise["y"], radix)
-            gcd, a, b = gcdExtended(x, y)
-            answer["answer-a"] = convert_from_base_10(a, radix)
-            answer["answer-b"] = convert_from_base_10(b, radix)
-            answer["answer-gcd"] = convert_from_base_10(gcd, radix)
+            gcd, a, b = gcdExtended(int(x), int(y))
+            answer["answer-a"] = convert_from_base_10(str(a), radix)
+            answer["answer-b"] = convert_from_base_10(str(b), radix)
+            answer["answer-gcd"] = convert_from_base_10(str(gcd), radix)
     else:  # exercise["type"] == "modular_arithmetic"
         # Check what operation within the modular arithmetic operations we need to solve
         if exercise["operation"] == "reduction":
@@ -267,7 +267,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
             answer = helper.modulus_substract(x,y,modulus,radix)
 
 
-
+        
             
             
         
@@ -280,11 +280,11 @@ def solve_exercise(exercise_location : str, answer_location : str):
             if modulus == 0:
                 answer["answer"] = None
             else:
-                multiplication_result = (x * y) % modulus
+                multiplication_result = (int(x) * int(y)) % int(modulus)
                 if multiplication_result is None:
                     answer["answer"] = None
                 else:
-                    answer["answer"] = convert_from_base_10(multiplication_result, radix)
+                    answer["answer"] = convert_from_base_10(str(multiplication_result), radix)
         
         elif exercise["operation"] == "inversion":
             # Implement modular inversion if needed
@@ -300,4 +300,4 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
-solve_exercise("Exercises/exercise2.json", "answer.json")
+solve_exercise("Exercises/exercise12.json", "answer.json")
