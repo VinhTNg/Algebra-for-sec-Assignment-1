@@ -29,31 +29,6 @@ def convert_to_base_10(number: str, base: int) -> str:
     
     return str(-result) if is_negative else str(result)
 
-def string_length(s: str) -> int:
-    """
-    Calculates the length of a string without using the built-in len()function.
-
-    :param s: The input string.
-    :type s: str
-    :return: The length of the string.
-    :rtype: int
-    """
-    # Base case: if the string is empty, return 0
-    if s == "":
-        return 0
-
-    # Recursive case: divide the string into two halves
-    mid = string_length(s) // 2
-    left_half = s[:mid]
-    right_half = s[mid:]
-
-    # Conquer: recursively calculate the length of each half
-    left_length = string_length(left_half)
-    right_length = string_length(right_half)
-
-    # Combine: sum the lengths of the two halves
-    return left_length + right_length
-
 def make_neg(num: str) -> str:
     """
     Makes a number negative if it is not already, or removes the negative sign if it is.
@@ -86,10 +61,10 @@ def is_greater(a: str, b: str, base: int) -> bool:
     if a[0] == '-' and b[0] == '-':
         return not is_greater(a[1:], b[1:], base)
 
-    if string_length(a) != string_length(b):
-        return string_length(a) > string_length(b)
+    if len(a) != len(b):
+        return len(a) > len(b)
     
-    for i in range(string_length(a)):
+    for i in range(len(a)):
         diff = substraction(a[i], b[i], base)
         if diff[0] == '-':
             return False
@@ -120,14 +95,14 @@ def addition(x: str, y: str, base: int) -> str:
     if y[0] == '-':
         return substraction(x, make_neg(y), base)
 
-    max_len = string_length(x) if is_greater(x, y, base) else string_length(y)
+    max_len = len(x) if is_greater(x, y, base) else len(y)
     x, y = x.zfill(max_len), y.zfill(max_len)
 
     carry = 0
     result = ''
 
     for i in range(max_len - 1, -1, -1):
-        total = carry + int(x[i], base) + int(y[i], base)
+        total = carry + int(convert_to_base_10(x[i], base)) + int(convert_to_base_10(y[i], base))
         carry = total // base
         result = symbols[total % base] + result
 
@@ -182,17 +157,17 @@ def substraction(x: str, y: str, base: int) -> str:
     if y[0] == '-':
         return addition(x, make_neg(y), base)
 
-    if string_length(y) > string_length(x) or (string_length(x) == string_length(y) and is_greater(y, x, base)):
+    if len(y) > len(x) or (len(x) == len(y) and is_greater(y, x, base)):
         return make_neg(substraction(y, x, base))
 
-    max_len = string_length(x) if string_length(x) > string_length(y) else string_length(y)
+    max_len = len(x) if len(x) > len(y) else len(y)
     x, y = x.zfill(max_len), y.zfill(max_len)
 
     carry = 0
     result = ''
 
     for i in range(max_len - 1, -1, -1):
-        diff = int(x[i], base) - int(y[i], base) - carry
+        diff = int(convert_to_base_10(x[i], base)) - int(convert_to_base_10(y[i], base)) - carry
         carry = 1 if diff < 0 else 0
         result = symbols[diff % base] + result
 
@@ -244,7 +219,7 @@ def multiplication(x: str, y: str, base: int) -> str:
     if y[0] == '-':
         return make_neg(multiplication(x, make_neg(y), base))
 
-    max_len = string_length(x) if string_length(x) > string_length(y) else string_length(y)
+    max_len = len(x) if len(x) > len(y) else len(y)
     x, y = x.zfill(max_len), y.zfill(max_len)
 
     result = '0'
@@ -465,10 +440,10 @@ def karatsuba(x: str, y: str, base: int) -> str:
     :return: The product of the two numbers.
     :rtype: str
     """
-    if string_length(x) == 1 or string_length(y) == 1:
+    if len(x) == 1 or len(y) == 1:
         return multiplication(x, y, base)
 
-    max_len = string_length(x) if string_length(x) > string_length(y) else string_length(y)
+    max_len = len(x) if len(x) > len(y) else len(y)
     if max_len % 2 != 0:
         max_len += 1
 
@@ -494,7 +469,7 @@ def length(x, r):
     Get length of string x in radix r.
     """
     k = '0'
-    while string_length(x) > 0:
+    while len(x) > 0:
         x = x[1:]
         k = addition(k, '1', r)
     return k
