@@ -251,7 +251,6 @@ def solve_exercise(exercise_location : str, answer_location : str):
             x = exercise["x"]
             y = exercise["y"]
 
-           
             modulus = exercise["modulus"]
             answer = helper.modulus_add(x,y,modulus,radix)
 
@@ -262,7 +261,6 @@ def solve_exercise(exercise_location : str, answer_location : str):
             x = exercise["x"]
             y = exercise["y"]
 
-           
             modulus = exercise["modulus"]
             answer = helper.modulus_substract(x,y,modulus,radix)
 
@@ -272,19 +270,10 @@ def solve_exercise(exercise_location : str, answer_location : str):
             
         
         elif exercise["operation"] == "multiplication":
-            # Solve modular arithmetic multiplication exercise
-            x = helper.convert_to_base_10(exercise["x"], radix)
-            y = helper.convert_to_base_10(exercise["y"], radix)
-            modulus = helper.convert_to_base_10(exercise["modulus"], radix)
-            
-            if modulus == 0:
-                answer["answer"] = None
-            else:
-                multiplication_result = (int(x) * int(y)) % int(modulus)
-                if multiplication_result is None:
-                    answer["answer"] = None
-                else:
-                    answer["answer"] = convert_from_base_10(str(multiplication_result), radix)
+            x = exercise["x"]
+            y = exercise["y"]
+            modulus = exercise["modulus"]
+            answer = helper.modulus_multiplication(x,y,modulus,radix)
         
         elif exercise["operation"] == "inversion":
             # Implement modular inversion if needed
