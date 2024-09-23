@@ -277,9 +277,10 @@ def solve_exercise(exercise_location : str, answer_location : str):
             answer = helper.modulus_multiplication(x,y,modulus,radix)
         
         elif exercise["operation"] == "inversion":
-            # Implement modular inversion if needed
-            # Placeholder for future implementation
-            pass
+            x = exercise["x"]
+            y = exercise["y"]
+            modulus = exercise["modulus"]
+            answer = helper.inversion(x,y,modulus,radix)
         
         else:
             raise ValueError(f"Unsupported operation: {exercise['operation']}")

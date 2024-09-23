@@ -561,3 +561,41 @@ def modulus_multiplication(x: str, y: str, mod: str, radix: int) -> str:
     z = modulus_red(z1, mod, radix)
     return z
 # print(modulus_multiplication("10","3","7",10))
+
+def inversion(x: str, m: str, base: int) -> str:
+    """
+    Computes the modular inverse of x modulo m using the Extended Euclidean Algorithm.
+
+    :param x: The number to find the inverse of.
+    :type x: str
+    :param m: The modulus.
+    :type m: str
+    :param base: The base of the numbers.
+    :type base: int
+    :return: The modular inverse of x modulo m.
+    :rtype: str
+    """
+    if m == '0':
+        raise ValueError("Modulus cannot be zero.")
+
+    # Initialize variables for the Extended Euclidean Algorithm
+    x0, x1 = '1', '0'
+    y0, y1 = '0', '1'
+    a, b = x, m
+
+    while b != '0':
+        q = floor_div(a, b, base)
+        r = modulus(a, b, base)
+
+        a, b = b, r
+
+        x0, x1 = x1, subtractx(x0, multiplication(q, x1, base), base)
+        y0, y1 = y1, subtractx(y0, multiplication(q, y1, base), base)
+
+    if a != '1':
+        return 'ERROR - inverse does not exist'
+
+    if x0[0] == '-':
+        x0 = add(x0, m, base)
+
+    return x0
