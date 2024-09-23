@@ -28,36 +28,6 @@ def convert_to_base_10(number: str, base: int) -> str:
     
     return str(-result) if is_negative else str(result)
 
-def string_length(s: str) -> int:
-    """
-    Manually converts a number in a given base to base 10 (decimal) and returns it as a string.
-
-    Parameters:
-    number (str): The number in the given base as a string.
-    base (int): The base of the input number (between 2 and 16).
-
-    Returns:
-    str: The number converted to base 10 as a string.
-    """
-    if base < 2 or base > 16:
-        raise ValueError("Base must be between 2 and 16 (inclusive).")
-    
-    digits = "0123456789ABCDEF"
-    number = number.upper()
-    is_negative = False
-    if number.startswith('-'):
-        is_negative = True
-        number = number[1:]
-    
-    result = "0"
-    for char in number:
-        if char not in digits[:base]:
-            raise ValueError(f"Invalid digit '{char}' for base {base}.")
-        digit_value = digits.index(char)
-        result = addition(str(multiplication(result, str(base), base)), digit_value)
-    
-    return "-" + result if is_negative else result
-
 def make_neg(num: str) -> str:
     """
     Makes a number negative if it is not already, or removes the negative sign if it is.
@@ -94,7 +64,7 @@ def is_greater(a: str, b: str, base: int) -> bool:
         return len(a) > len(b)
     
     for i in range(len(a)):
-        diff = substraction(a[i], b[i], base)
+        diff = subtractx(a[i], b[i], base)
         if diff[0] == '-':
             return False
         if diff != '0':
@@ -296,11 +266,10 @@ def floor_div(x: str, y: str, base: int) -> str:
     temp = x
     result = '0'
     while is_greater(temp, y, base) or temp == y:
-        temp = substraction(temp, y, base)
-        result = addition(result, '1', base)
+        temp = subtractx(temp, y, base)
+        result = add(result, '1', base)
 
     return result
-
 
 import random
 def subtractx(a_str, b_str, base):
@@ -619,5 +588,5 @@ def modulus_add(x: str, y: str, mod: str, radix: int):
 
     
     
-
+print(floor_div("100000000","2",10))
 #print(subtractx("1000000000000000000","-1",10))

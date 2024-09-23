@@ -114,7 +114,6 @@ def solve_exercise(exercise_location : str, answer_location : str):
             base = int(radix)
             answer["answer"] = helper.add(x,y,base)
             # Solve integer arithmetic addition exercise
-            #pass
         elif exercise["operation"] == "subtraction":
             # Solve integer arithmetic subtraction exercise
             x = exercise["x"]
@@ -172,7 +171,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
             if isNegative:
                 result_str = '-' + result_str
                 
-            answer["answer"] = convert_from_base_10(int(result_str), radix)
+            answer["answer"] = convert_from_base_10(result_str, radix)
             
         elif exercise["operation"] == "multiplication_karatsuba":
             # Solve integer arithmetic multiplication by Karatsuba method
@@ -210,7 +209,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
             if isNegative:
                 result_str = '-' + result_str
                 
-            answer["answer"] = convert_from_base_10(int(result_str), radix)
+            answer["answer"] = convert_from_base_10(result_str, radix)
             pass
         elif exercise["operation"] == "extended_euclidean_algorithm":
             x = helper.convert_to_base_10(exercise["x"], radix)
@@ -230,19 +229,6 @@ def solve_exercise(exercise_location : str, answer_location : str):
             while helper.is_greater(x, modulus, base) or x == modulus:
                 x = helper.subtractx(x, modulus, base)
             answer["answer"] = x
-
-            # x = helper.convert_to_base_10(exercise["x"], radix)
-            # if exercise["modulus"].startswith("-"):
-            #     modulus = helper.convert_to_base_10(exercise["modulus"][1:], radix)
-            # else:
-            #     modulus = helper.convert_to_base_10(exercise["modulus"], radix)
-
-            # if modulus == "0":
-            #     answer["answer"] = None
-            # else:
-            #     while x > modulus:
-            #         sum = helper.substraction(x, modulus, 10)
-            #     answer["answer"] = convert_from_base_10(x, radix)
         
         elif exercise["operation"] == "addition":
             # Solve modular arithmetic addition exercise
@@ -302,4 +288,4 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
-solve_exercise("Exercises/exercise5.json", "answer.json")
+solve_exercise("Exercises/exercise3.json", "answer.json")
