@@ -593,6 +593,31 @@ def length(x, r):
     return k
 
 
+def modulus_substract(x: str, y: str, mod: str, radix: int):
+    if mod == "0":
+        return None
+    z = subtractx(x, y, radix)  # x - y mod
+    last_valid_z = z  # keep track of the last valid result
+    while "-" not in z:
+        last_valid_z = z  # update last valid result
+        z = subtractx(z, mod, radix)  # subtract mod
+    return last_valid_z  # return the last valid z before negative
 
+
+def modulus_add(x: str, y: str, mod: str, radix: int):
+    if mod =="0":
+        return None
+    z = add(x, y, radix)
+    last_valid_z = z  # keep track of the last valid result
+
+    while "-" not in z:
+        last_valid_z = z  # update last valid result
+        z = subtractx(z, mod, radix)  # subtract mod
+    return last_valid_z  # return the last valid z before negative
+
+    
+
+    
+    
 
 #print(subtractx("1000000000000000000","-1",10))

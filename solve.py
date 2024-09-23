@@ -247,36 +247,31 @@ def solve_exercise(exercise_location : str, answer_location : str):
         elif exercise["operation"] == "addition":
             # Solve modular arithmetic addition exercise
             # Convert x, y, m to base 10
-            x = helper.convert_to_base_10(exercise["x"], radix)
-            y = helper.convert_to_base_10(exercise["y"], radix)
-            if exercise["modulus"].startswith("-"):
-                modulus = helper.convert_to_base_10(exercise["modulus"][1:], radix)
-            else:
-                modulus = helper.convert_to_base_10(exercise["modulus"], radix)
+            #x = helper.add(exercise["x"],exercise["y"], radix)
+            #y = helper.convert_to_base_10(exercise["y"], radix)
+            #modulus = helper.convert_to_base_10(exercise["modulus"], radix)
+            x = exercise["x"]
+            y = exercise["y"]
+
+           
+            modulus = exercise["modulus"]
+            answer = helper.modulus_add(x,y,modulus,radix)
+
             
-            if modulus == "0":
-                answer["answer"] = None
-            else:
-                sum = x + y
-                while sum > modulus:
-                    sum = helper.substraction(sum, modulus, 10)
-                answer["answer"] = convert_from_base_10(sum, radix)
         
         elif exercise["operation"] == "subtraction":
             # Solve modular arithmetic subtraction exercise
-            x = helper.convert_to_base_10(exercise["x"], radix)
-            y = helper.convert_to_base_10(exercise["y"], radix)
-            modulus = helper.convert_to_base_10(exercise["modulus"], radix)
+            x = exercise["x"]
+            y = exercise["y"]
+
+           
+            modulus = exercise["modulus"]
+            answer = helper.modulus_substract(x,y,modulus,radix)
+
+
+
             
-            if modulus == 0:
-                answer["answer"] = None
-            else:
-                subtraction_result = (x - y) % modulus
-                # subtraction_result = modular_subtraction(x, y, modulus)
-                if subtraction_result is None:
-                    answer["answer"] = None
-                else:
-                    answer["answer"] = convert_from_base_10(subtraction_result, radix)
+            
         
         elif exercise["operation"] == "multiplication":
             # Solve modular arithmetic multiplication exercise
