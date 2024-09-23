@@ -177,6 +177,20 @@ def add(a,b ,base=3):
         if xs and not ys:  #x+-y
             return None
 
+def gcdExtended(a: int, b: int) -> tuple[int, int, int]:
+    # Base Case
+    if a == 0:
+        return b, 0, 1
+
+    gcd, x1, y1 = gcdExtended(b % a, a)
+
+    # Update x and y using results of recursive
+    # call
+    x = y1 - (b//a) * x1
+    y = x1
+
+    return gcd, x, y
+
 # Define a 32-bit integer type using fixedint
 Int32 = fixedint.Int32
 
@@ -280,24 +294,23 @@ def solve_exercise(exercise_location : str, answer_location : str):
             y = exercise["y"]
             base = int(radix)
             answer["answer"] = add(x,y,base)
-
-
-
-
             # Solve integer arithmetic addition exercise
             #pass
         elif exercise["operation"] == "subtraction":
             # Solve integer arithmetic subtraction exercise
-            pass
+            x = convert_to_base_10(exercise["x"], radix)
+            y = convert_to_base_10(exercise["y"], radix)
+            answer["answer"] = convert_from_base_10(x - y, radix)
+            #pass
         # et cetera
         
         elif exercise["operation"] == "multiplication_primary":
-            # Check the negativity of the result
-            isNegative = (x < 0) ^ (y < 0)  # XOR: True if only one of them is negative
-            
             # Solve integer arithmetic multiplication by primary school method
             x = convert_to_base_10(exercise["x"], exercise["radix"]) # convert x in radix given in the exercise to base 10
             y = convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
+            
+            # Check the negativity of the result
+            isNegative = (x < 0) ^ (y < 0)  # XOR: True if only one of them is negative
             
             # Take absolute values for multiplication
             x = abs(x)
@@ -338,7 +351,8 @@ def solve_exercise(exercise_location : str, answer_location : str):
             if isNegative:
                 result_str = '-' + result_str
     
-            return result_str
+            answer = convert_from_base_10(int(result_str), radix)
+            
         
     else:  # exercise["type"] == "modular_arithmetic"
         # Check what operation within the modular arithmetic operations we need to solve
@@ -424,4 +438,4 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
-solve_exercise("Exercises/exercise9.json", "answer.json")
+solve_exercise("Exercises/exercise6.json", "answer.json")
