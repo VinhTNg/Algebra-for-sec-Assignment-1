@@ -1,5 +1,3 @@
-import solve
-
 def string_length(s: str) -> int:
     """
     Calculates the length of a string without using the built-in len()function.
