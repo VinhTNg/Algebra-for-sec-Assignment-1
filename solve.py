@@ -226,9 +226,21 @@ def solve_exercise(exercise_location : str, answer_location : str):
             modulus = exercise["modulus"]
             base = int(radix)
             # Keep reducing x until it is smaller than the modulus
-            while helper.is_greater(x, modulus, base) or x == modulus:
-                x = helper.subtractx(x, modulus, base)
-            answer["answer"] = x
+            
+            answer["answer"] = helper.modulus_red(x,modulus,radix)
+
+            # x = helper.convert_to_base_10(exercise["x"], radix)
+            # if exercise["modulus"].startswith("-"):
+            #     modulus = helper.convert_to_base_10(exercise["modulus"][1:], radix)
+            # else:
+            #     modulus = helper.convert_to_base_10(exercise["modulus"], radix)
+
+            # if modulus == "0":
+            #     answer["answer"] = None
+            # else:
+            #     while x > modulus:
+            #         sum = helper.substraction(x, modulus, 10)
+            #     answer["answer"] = convert_from_base_10(x, radix)
         
         elif exercise["operation"] == "addition":
             # Solve modular arithmetic addition exercise
