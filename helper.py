@@ -597,23 +597,38 @@ def modulus_substract(x: str, y: str, mod: str, radix: int):
     if mod == "0":
         return None
     z = subtractx(x, y, radix)  # x - y mod
-    last_valid_z = z  # keep track of the last valid result
-    while "-" not in z:
-        last_valid_z = z  # update last valid result
-        z = subtractx(z, mod, radix)  # subtract mod
-    return last_valid_z  # return the last valid z before negative
+    if "-" not in z:
+        
+        last_valid_z = z  # keep track of the last valid result
+        while "-" not in z:
+            last_valid_z = z  # update last valid result
+            z = subtractx(z, mod, radix)  # subtract mod
+        return last_valid_z  # return the last valid z before negative
+    if "-" in z:
+        while "-" in z:
+             z = add(z, mod, radix)
+        return z
 
 
 def modulus_add(x: str, y: str, mod: str, radix: int):
-    if mod =="0":
+    if mod == "0":
         return None
-    z = add(x, y, radix)
-    last_valid_z = z  # keep track of the last valid result
-
-    while "-" not in z:
-        last_valid_z = z  # update last valid result
-        z = subtractx(z, mod, radix)  # subtract mod
-    return last_valid_z  # return the last valid z before negative
+    
+    z = add(x, y, radix)  # Add x and y
+    
+    # If z is non-negative, subtract mod until z becomes negative
+    if "-" not in z:
+        last_valid_z = z  # Keep track of the last valid result
+        while "-" not in z:
+            last_valid_z = z  # Update the last valid result
+            z = subtractx(z, mod, radix)  # Subtract mod
+        return last_valid_z  # Return the last valid z before it turns negative
+    
+    # If z is negative, add mod until z becomes non-negative
+    else:
+        while "-" in z:
+            z = add(z, mod, radix)  # Add mod to bring z into non-negative range
+        return z
 
     
 
