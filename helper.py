@@ -271,7 +271,7 @@ def floor_div(x: str, y: str, base: int) -> str:
 
     return result
 
-import random
+# import random
 def subtractx(a_str, b_str, base):
     def create(base):
         mp = {10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F'}
@@ -562,3 +562,12 @@ def modulus_red(x: str, mod: str, radix: int):
             x = add(x, mod, radix)  # Add mod directly to x, keeping the sign intact
         return x
 #print(subtractx("1000000000000000000","-1",10))
+
+def modulus_multiplication(x: str, y: str, mod: str, radix: int) -> str:
+    a = modulus_red(x, mod, radix)
+    b = modulus_red(y, mod, radix)
+    z1 = multiplication(a, b, radix)
+    z = modulus_red(z1, mod, radix)
+    return z
+# print(modulus_multiplication("10","3","7",10))
+
