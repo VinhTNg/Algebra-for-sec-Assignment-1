@@ -1,3 +1,34 @@
+def convert_to_base_10(number: str, base: int) -> str:
+    """
+    Manually converts a number in a given base to base 10 (decimal) and returns it as a string.
+
+    Parameters:
+    number (str): The number in the given base as a string.
+    base (int): The base of the input number (between 2 and 16).
+
+    Returns:
+    str: The number converted to base 10 as a string.
+    """
+    if base < 2 or base > 16:
+        raise ValueError("Base must be between 2 and 16 (inclusive).")
+    
+    digits = "0123456789ABCDEF"
+    number = number.upper()
+    is_negative = False
+    if number.startswith('-'):
+        is_negative = True
+        number = number[1:]
+    
+    result = 0
+    for char in number:
+        if char not in digits[:base]:
+            raise ValueError(f"Invalid digit '{char}' for base {base}.")
+        digit_value = digits.index(char)
+        print(f"result = {result} * {base} + {digit_value}")
+        result = result * base + digit_value
+    
+    return str(-result) if is_negative else str(result)
+
 def string_length(s: str) -> int:
     """
     Calculates the length of a string without using the built-in len()function.
@@ -418,7 +449,7 @@ def test_subtraction(num_trials=100000):
     print(f"All {num_trials} tests passed successfully!")
 
 # Run the test function
-test_subtraction()
+# test_subtraction()
 
 
 def karatsuba(x: str, y: str, base: int) -> str:

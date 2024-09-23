@@ -189,37 +189,6 @@ def gcdExtended(a: int, b: int) -> tuple[int, int, int]:
 
     return gcd, x, y
 
-
-def convert_to_base_10(number: str, base: int) -> int:
-    """
-    Manually converts a number in a given base to base 10 (decimal).
-
-    Parameters:
-    number (str): The number in the given base as a string.
-    base (int): The base of the input number (between 2 and 16).
-
-    Returns:
-    int: The number converted to base 10.
-    """
-    if base < 2 or base > 16:
-        raise ValueError("Base must be between 2 and 16 (inclusive).")
-    
-    digits = "0123456789ABCDEF"
-    number = number.upper()
-    is_negative = False
-    if number.startswith('-'):
-        is_negative = True
-        number = number[1:]
-    
-    result = 0
-    for char in number:
-        if char not in digits[:base]:
-            raise ValueError(f"Invalid digit '{char}' for base {base}.")
-        digit_value = digits.index(char)
-        result = result * base + digit_value
-    
-    return -result if is_negative else result
-
 def convert_from_base_10(number: int, base: int) -> str:
     """
     Manually converts a decimal (base-10) number to the target base (between 2 and 16).
@@ -286,13 +255,13 @@ def solve_exercise(exercise_location : str, answer_location : str):
             #pass
         elif exercise["operation"] == "subtraction":
             # Solve integer arithmetic subtraction exercise
-            x = convert_to_base_10(exercise["x"], radix)
-            y = convert_to_base_10(exercise["y"], radix)
+            x = helper.convert_to_base_10(exercise["x"], radix)
+            y = helper.convert_to_base_10(exercise["y"], radix)
             answer["answer"] = convert_from_base_10(x - y, radix)
         elif exercise["operation"] == "multiplication_primary":
             # Solve integer arithmetic multiplication by primary school method
-            x = convert_to_base_10(exercise["x"], exercise["radix"]) # convert x in radix given in the exercise to base 10
-            y = convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
+            x = helper.convert_to_base_10(exercise["x"], exercise["radix"]) # convert x in radix given in the exercise to base 10
+            y = helper.helper.convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
             
             # Check the negativity of the result
             isNegative = (x < 0) ^ (y < 0)  # XOR: True if only one of them is negative
@@ -373,13 +342,13 @@ def solve_exercise(exercise_location : str, answer_location : str):
                 return answer
                 
             # Solve integer arithmetic multiplication by Karatsuba method
-            x = convert_to_base_10(exercise["x"], exercise["radix"]) # convert x in radix given in the exercise to base 10
-            y = convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
+            x = helper.convert_to_base_10(exercise["x"], exercise["radix"]) # convert x in radix given in the exercise to base 10
+            y = helper.convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
             
             answer["answer"] = convert_from_base_10(Karatsuba(x, y), radix)
         elif exercise["operation"] == "extended_euclidean_algorithm":
-            x = convert_to_base_10(exercise["x"], radix)
-            y = convert_to_base_10(exercise["y"], radix)
+            x = helper.convert_to_base_10(exercise["x"], radix)
+            y = helper.convert_to_base_10(exercise["y"], radix)
             gcd, a, b = gcdExtended(x, y)
             answer["answer-a"] = convert_from_base_10(a, radix)
             answer["answer-b"] = convert_from_base_10(b, radix)
@@ -388,8 +357,8 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Check what operation within the modular arithmetic operations we need to solve
         if exercise["operation"] == "reduction":
             # Solve modular arithmetic reduction exercise
-            x = convert_to_base_10(exercise["x"], radix)
-            modulus = convert_to_base_10(exercise["modulus"], radix)
+            x = helper.convert_to_base_10(exercise["x"], radix)
+            modulus = helper.convert_to_base_10(exercise["modulus"], radix)
 
             if modulus == 0:
                 answer["answer"] = None
@@ -403,9 +372,9 @@ def solve_exercise(exercise_location : str, answer_location : str):
         elif exercise["operation"] == "addition":
             # Solve modular arithmetic addition exercise
             # Convert x, y, m to base 10
-            x = convert_to_base_10(exercise["x"], radix)
-            y = convert_to_base_10(exercise["y"], radix)
-            modulus = convert_to_base_10(exercise["modulus"], radix)
+            x = helper.convert_to_base_10(exercise["x"], radix)
+            y = helper.convert_to_base_10(exercise["y"], radix)
+            modulus = helper.convert_to_base_10(exercise["modulus"], radix)
             
             if modulus == 0:
                 answer["answer"] = None
@@ -419,9 +388,9 @@ def solve_exercise(exercise_location : str, answer_location : str):
         
         elif exercise["operation"] == "subtraction":
             # Solve modular arithmetic subtraction exercise
-            x = convert_to_base_10(exercise["x"], radix)
-            y = convert_to_base_10(exercise["y"], radix)
-            modulus = convert_to_base_10(exercise["modulus"], radix)
+            x = helper.convert_to_base_10(exercise["x"], radix)
+            y = helper.convert_to_base_10(exercise["y"], radix)
+            modulus = helper.convert_to_base_10(exercise["modulus"], radix)
             
             if modulus == 0:
                 answer["answer"] = None
@@ -435,9 +404,9 @@ def solve_exercise(exercise_location : str, answer_location : str):
         
         elif exercise["operation"] == "multiplication":
             # Solve modular arithmetic multiplication exercise
-            x = convert_to_base_10(exercise["x"], radix)
-            y = convert_to_base_10(exercise["y"], radix)
-            modulus = convert_to_base_10(exercise["modulus"], radix)
+            x = helper.convert_to_base_10(exercise["x"], radix)
+            y = helper.convert_to_base_10(exercise["y"], radix)
+            modulus = helper.convert_to_base_10(exercise["modulus"], radix)
             
             if modulus == 0:
                 answer["answer"] = None
