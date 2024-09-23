@@ -36,10 +36,11 @@ def gcdExtended(a: int, b: int) -> tuple[int, int, int]:
 
 def convert_from_base_10(number: str, base: int) -> str:
     """
-    Manually converts a decimal (base-10) number to the target base (between 2 and 16).
+    Converts a decimal (base-10) number to the target base (between 2 and 16) 
+    without converting the number to an integer type.
     
     Parameters:
-    number (int): The decimal number to convert.
+    number (str): The decimal number as a string.
     base (int): The base to convert to (between 2 and 16).
     
     Returns:
@@ -49,25 +50,38 @@ def convert_from_base_10(number: str, base: int) -> str:
         raise ValueError("Base must be between 2 and 16 (inclusive).")
     
     digits = "0123456789ABCDEF"
-    str_base = str(base)
+    
+    # Check for negative number
+    is_negative = number.startswith('-')
+    if is_negative:
+        number = number[1:]
+
+    # Handle zero case
     if number == "0":
         return "0"
     
-    is_negative = False
-    if number.startswith("-"):
-        is_negative = True
-        number = number[1:]
-    
     result = ""
-    while helper.is_greater(number, "0", 10):
-        remainder = helper.mod(number, str_base, base)
-        result = digits[int(remainder)] + result
-        number = helper.floor_div(number, str_base, base)
     
-    return "-" + result if is_negative else result
+    # While the number is greater than 0
+    while number != "0":
+        # Calculate the remainder
+        remainder = str(int(number) % base)  # Convert to int only for modulus
+        result = digits[int(remainder)] + result
+        
+        # Perform floor division and update the number
+        quotient = ""
+        temp = 0
+        for char in number:
+            temp = temp * 10 + int(char)
+            if temp >= base:
+                quotient += str(temp // base)
+                temp = temp % base
+            elif quotient:  # avoid leading zeros
+                quotient += '0'
+        
+        number = quotient if quotient else "0"
 
-#test convert_from_base_10
-print(convert_from_base_10("10", 2)) # 1010
+    return "-" + result if is_negative else result
 
 def solve_exercise(exercise_location : str, answer_location : str):
     """
