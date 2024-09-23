@@ -1,3 +1,5 @@
+import solve
+
 def string_length(s: str) -> int:
     """
     Calculates the length of a string without using the built-in len()function.
@@ -96,7 +98,7 @@ def addition(x: str, y: str, base: int) -> str:
     result = ''
 
     for i in range(max_len - 1, -1, -1):
-        total = carry + int(x[i], base) + int(y[i], base)
+        total = carry + solve.convert_to_base_10(x[i], base) + solve.convert_to_base_10(y[i], base)
         carry = total // base
         result = symbols[total % base] + result
 
@@ -161,7 +163,7 @@ def substraction(x: str, y: str, base: int) -> str:
     result = ''
 
     for i in range(max_len - 1, -1, -1):
-        diff = int(x[i], base) - int(y[i], base) - carry
+        diff = solve.convert_to_base_10(x[i], base) - solve.convert_to_base_10(y[i], base) - carry
         carry = 1 if diff < 0 else 0
         result = symbols[diff % base] + result
 
@@ -221,7 +223,7 @@ def multiplication(x: str, y: str, base: int) -> str:
         temp_result = ''
         carry = 0
         for digit_y in reversed(y):
-            product = int(digit_x, base) * int(digit_y, base) + carry
+            product = solve.convert_to_base_10(digit_x, base) * solve.convert_to_base_10(digit_y, base) + carry
             carry = product // base
             temp_result = symbols[product % base] + temp_result
         if carry:
