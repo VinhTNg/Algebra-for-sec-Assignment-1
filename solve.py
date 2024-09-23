@@ -383,14 +383,14 @@ def solve_exercise(exercise_location : str, answer_location : str):
                 if isNegative:
                     result_str = '-' + result_str
                 
-                answer = convert_from_base_10(int(result_str), radix)
+                answer = int(result_str)
                 return answer
                 
             # Solve integer arithmetic multiplication by Karatsuba method
             x = convert_to_base_10(exercise["x"], exercise["radix"]) # convert x in radix given in the exercise to base 10
             y = convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
             
-            Karatsuba(x, y)
+            answer = convert_from_base_10(Karatsuba(x, y), radix)
             pass
         elif exercise["operation"] == "extended_euclidean_algorithm":
             x = convert_to_base_10(exercise["x"], radix)
@@ -483,4 +483,4 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
-solve_exercise("Exercises/exercise11.json", "answer.json")
+solve_exercise("Exercises/exercise3.json", "answer.json")
