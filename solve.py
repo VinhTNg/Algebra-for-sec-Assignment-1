@@ -387,8 +387,15 @@ def solve_exercise(exercise_location : str, answer_location : str):
                 x_32 = Int32(x)
                 y_32 = Int32(y)
                 modulus_32 = Int32(modulus)
-                addition_result = Int32((x_32.int + y_32.int) % modulus_32.int).int
-                answer["answer"] = convert_from_base_10(addition_result, radix)
+                x = int(x_32)
+                y = int(y_32)
+                modulus = int(modulus_32)
+                sum = x + y
+                while sum > modulus:
+                    sum -= modulus
+                answer["answer"] = convert_from_base_10(sum, radix)
+                # addition_result = Int32((int(x_32) + int(y_32)) % int(modulus_32))
+                # answer["answer"] = convert_from_base_10(int(addition_result), radix)
         
         elif exercise["operation"] == "subtraction":
             # Solve modular arithmetic subtraction exercise
@@ -442,4 +449,4 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
-solve_exercise("Exercises/exercise9.json", "answer.json")
+solve_exercise("Exercises/exercise4.json", "answer.json")
