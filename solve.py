@@ -170,9 +170,9 @@ def solve_exercise(exercise_location : str, answer_location : str):
                 maxSize = max(len(x_str), len(y_str))
                 halfSize = maxSize // 2
 
-                # Split x and y into two halves
-                highX, lowX = x // (10**halfSize), x % (10**halfSize)
-                highY, lowY = y // (10**halfSize), y % (10**halfSize)
+            # Split x and y into two halves
+            highX, lowX = int_x // (10**halfSize), int_x % (10**halfSize)
+            highY, lowY = int_y // (10**halfSize), int_y % (10**halfSize)
 
                 # Recursive calls for the three products
                 firstPart = Karatsuba(highX, highY)                     # highX * highY
