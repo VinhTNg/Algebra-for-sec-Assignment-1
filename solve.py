@@ -130,7 +130,8 @@ def solve_exercise(exercise_location : str, answer_location : str):
             y = helper.convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
             
             # Check the negativity of the result
-            isNegative = (x < 0) ^ (y < 0)  # XOR: True if only one of them is negative
+            if x.startswith("-") ^ y.startswith("-"):
+                isNegative = True
             
             # Take absolute values for multiplication
             int_x = abs(int(x))
@@ -170,24 +171,28 @@ def solve_exercise(exercise_location : str, answer_location : str):
             # Apply the negative sign if needed
             if isNegative:
                 result_str = '-' + result_str
-    
+                
             answer["answer"] = convert_from_base_10(int(result_str), radix)
+            
         elif exercise["operation"] == "multiplication_karatsuba":
-            def Karatsuba(x, y):
-                # Base case for recursion: if either x or y is a single digit number
-                if x < 10 or y < 10:
-                    answer = x * y
-                # Check the negativity of the result
-                isNegative = (x < 0) ^ (y < 0)  # XOR: True if only one of them is negative
-                # Get the absolute values
-                x = abs(x)
-                y = abs(y)
-                # Convert numbers to strings
-                x_str = str(x)
-                y_str = str(y)
-                # Calculates the size of the numbers
-                maxSize = max(len(x_str), len(y_str))
-                halfSize = maxSize // 2
+            # Solve integer arithmetic multiplication by Karatsuba method
+            x = helper.convert_to_base_10(exercise["x"], exercise["radix"]) # convert x in radix given in the exercise to base 10
+            y = helper.convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
+            # Check the negativity of the result
+            if x.startswith("-") ^ y.startswith("-"):
+                isNegative = True           
+            # Get the absolute values
+            int_x = abs(int(x))
+            int_y = abs(int(y))
+            # Base case for recursion: if either x or y is a single digit number
+            if int_x < 10 or int_y < 10:
+                answer = int_x * int_y
+            # Convert numbers to strings
+            x_str = str(x)
+            y_str = str(y)
+            # Calculates the size of the numbers
+            maxSize = max(len(x_str), len(y_str))
+            halfSize = maxSize // 2
 
             # Split x and y into two halves
             highX, lowX = int_x // (10**halfSize), int_x % (10**halfSize)
@@ -218,18 +223,26 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Check what operation within the modular arithmetic operations we need to solve
         if exercise["operation"] == "reduction":
             # Solve modular arithmetic reduction exercise
-            x = helper.convert_to_base_10(exercise["x"], radix)
-            if exercise["modulus"].startswith("-"):
-                modulus = helper.convert_to_base_10(exercise["modulus"][1:], radix)
-            else:
-                modulus = helper.convert_to_base_10(exercise["modulus"], radix)
+            x = exercise["x"]
+            modulus = exercise["modulus"]
+            base = int(radix)
+            # Keep reducing x until it is smaller than the modulus
+            while helper.is_greater(x, modulus, base) or x == modulus:
+                x = helper.subtractx(x, modulus, base)
+            answer["answer"] = x
 
-            if modulus == "0":
-                answer["answer"] = None
-            else:
-                while x > modulus:
-                    sum = helper.substraction(x, modulus, 10)
-                answer["answer"] = convert_from_base_10(x, radix)
+            # x = helper.convert_to_base_10(exercise["x"], radix)
+            # if exercise["modulus"].startswith("-"):
+            #     modulus = helper.convert_to_base_10(exercise["modulus"][1:], radix)
+            # else:
+            #     modulus = helper.convert_to_base_10(exercise["modulus"], radix)
+
+            # if modulus == "0":
+            #     answer["answer"] = None
+            # else:
+            #     while x > modulus:
+            #         sum = helper.substraction(x, modulus, 10)
+            #     answer["answer"] = convert_from_base_10(x, radix)
         
         elif exercise["operation"] == "addition":
             # Solve modular arithmetic addition exercise
@@ -289,4 +302,4 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
-#solve_exercise("Exercises/exercise4.json", "answer.json")
+solve_exercise("Exercises/exercise5.json", "answer.json")
