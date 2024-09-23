@@ -433,7 +433,8 @@ def solve_exercise(exercise_location : str, answer_location : str):
             pass
         
         else:
-            raise ValueError(f"Unsupported operation: {exercise["operation"]}")
+            #raise ValueError(f"Unsupported operation: {exercise["operation"]}")
+            pass
     
     # Open file at answer_location for writing, creating the file if it does not exist yet
     # (and overwriting it if it does already exist).
@@ -441,4 +442,4 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
-solve_exercise("Exercises/exercise4.json", "answer.json")
+solve_exercise("Exercises/exercise9.json", "answer.json")
