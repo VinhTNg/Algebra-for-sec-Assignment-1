@@ -18,6 +18,165 @@
 import json
 import fixedint
 
+
+
+# support function addition part
+def padding(x, y):
+    # Args:
+    #   x: First number as an int or string.
+    #   y: Second number as an int or string.
+    # Pads 'x' and 'y' with leading zeros until they are the same length.
+    # Returns: Tuple of two equal-length strings (x, y).
+    
+    x = str(x)
+    y = str(y)
+
+    while len(x) < len(y):
+        x = "0" + x
+    while len(y) < len(x):
+        y = "0" + y
+
+    return x, y
+
+
+
+def right_pad(x, y):
+    # Args:
+    #   x: First number as an int or string.
+    #   y: Second number as an int or string.
+    # Pads 'x' and 'y' with trailing zeros until they are the same length.
+    # Returns: Tuple of two equal-length strings (x, y).
+    
+    x = str(x)
+    y = str(y)
+
+    while len(x) < len(y):
+        x = x + "0"
+    while len(y) < len(x):
+        y = y + "0"
+
+    return x, y
+
+
+def create(base):
+    # Args:
+    #   base: The numerical base (int).
+    # Creates a list of digits for the given base (0-9, A-F).
+    # Returns: List of digit strings for the base.
+    
+    mp = {10: "A", 11: "B", 12: "C", 13: "D", 14: "E", 15: "F"}
+
+    digits = [mp[i] if i in mp else str(i) for i in range(base)]
+
+    return digits
+
+
+def right_shift(number: str):
+    # Args:
+    #   number: A string representing the number to be shifted.
+    # Adds a '0' to the left of the number (shifts it right logically).
+    # Returns: A new string with a '0' prepended.
+    
+    return "0" + number
+
+
+def spin(a, b, basenum):
+    # Args:
+    #   a: The first digit as an int.
+    #   b: The second digit as an int.
+    #   basenum: A list of valid digits/characters for the base (e.g., ['0', '1', ..., 'F'] for base 16).
+    # Converts 'a' and 'b' to their respective string values (if applicable), then simulates
+    # a circular shift using base digits.
+    # Returns: A tuple of (result digit, carry as a string).
+    
+    # Mapping for digits 10-15 to corresponding alphabetic digits
+    mp = {10: "A", 11: "B", 12: "C", 13: "D", 14: "E", 15: "F"}
+    
+    # Convert 'a' and 'b' to strings if needed (for base systems > 10)
+    a = mp[a] if a in mp else str(a)
+    b = mp[b] if b in mp else str(b)
+    carries = 0
+
+    # Find the index of 'a' and 'b' in the basenum list
+    index_a = basenum.index(a)
+    index_b = basenum.index(b)
+
+    # Shift the base to start from 'a'
+    ready = basenum[index_a:] + basenum[:index_a]
+    
+    # Find the result after the shift
+    answer = ready[index_b]
+
+    # Determine if there's a carry
+    if (answer < a) or (answer < b):
+        carries = 1
+    
+    return answer, str(carries)
+
+
+
+def combine(a: str, b: str, base: list[str]):
+    # Args:
+    #   a: The first number as a string.
+    #   b: The second number as a string.
+    #   base: A list of valid digits/characters for the base (e.g., ['0', '1', ..., 'F'] for base 16).
+    # Combines two numbers digit by digit using the 'spin' function and tracks carries.
+    # Returns: A tuple of (answer, carries), where both are strings.
+    
+    ax = list(a)  # Convert 'a' into a list of digits/characters
+    bx = list(b)  # Convert 'b' into a list of digits/characters
+    answer = ""   # To store the final result after combination
+    carries = ""  # To store the carry values
+
+    # Iterate through both 'a' and 'b' digits simultaneously
+    for a_i, b_i in zip(ax, bx):
+        out = spin(a_i, b_i, basenum=base)  # Use the spin function to combine digits
+        ans_i, carr_i = out
+
+        # Append the result and carry for the current digit
+        answer += ans_i
+        carries += carr_i
+    
+    return answer, carries
+
+
+def add(a,b ,base=3):
+    base_num =create(base)
+
+    a=str(a)
+    b=str(b)
+
+    xs = a.startswith("-")
+    ys = b.startswith("-")
+
+    a = a.lstrip("-")
+    b = b.lstrip("-")
+
+
+    
+    ax,by =  padding(a,b)
+    #flip the numbers ,we start with the right most digit,the least signifact
+    ax =ax[::-1]
+    by =by[::-1]
+
+    if not( xs or ys)  or (xs and ys):
+        while not all(x=="0" for x in by):
+
+            sum_no_carry,carries =combine(ax,by,base=base_num)
+
+            carries =right_shift(carries)
+
+            a,b =right_pad(sum_no_carry,carries)
+            ax= a
+            by =b
+
+        if xs and ys: #-x-y ->-(x+y)
+            return "-"+ax[::-1].lstrip('0')
+        if not (xs or ys): #x+y
+            return ax[::-1].lstrip('0')  
+        if xs and not ys:  #x+-y
+            return None
+
 # Define a 32-bit integer type using fixedint
 Int32 = fixedint.Int32
 
@@ -117,8 +276,16 @@ def solve_exercise(exercise_location : str, answer_location : str):
     if exercise["type"] == "integer_arithmetic":
         # Check what operation within the integer arithmetic operations we need to solve
         if exercise["operation"] == "addition":
+            x =exercise["x"]
+            y = exercise["y"]
+            base = int(radix)
+            answer["answer"] = add(x,y,base)
+
+
+
+
             # Solve integer arithmetic addition exercise
-            pass
+            #pass
         elif exercise["operation"] == "subtraction":
             # Solve integer arithmetic subtraction exercise
             pass
@@ -207,4 +374,4 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
-solve_exercise("SimpleExercises/exercise9.json", "answer.json")
+solve_exercise("Exercises/exercise9.json", "answer.json")
