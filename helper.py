@@ -72,6 +72,44 @@ def is_greater(a: str, b: str, base: int) -> bool:
 
     return False
 
+def modulus(x: str, y: str, base: int) -> str:
+    """
+    Computes the modulus of x by y in a given base.
+
+    :param x: The dividend.
+    :type x: str
+    :param y: The divisor.
+    :type y: str
+    :param base: The base of the numbers.
+    :type base: int
+    :return: The result of x % y.
+    :rtype: str
+    """
+    if y == '0':
+        raise ValueError("Cannot divide by zero.")
+    
+    if x[0] == '-' and y[0] == '-':
+        return modulus(make_neg(x), make_neg(y), base)
+    if x[0] == '-':
+        return make_neg(modulus(make_neg(x), y, base))
+    if y[0] == '-':
+        return modulus(x, make_neg(y), base)
+
+    if is_greater(y, x, base):
+        return x
+    if x == y:
+        return '0'
+
+    temp = x
+    while is_greater(temp, y, base) or temp == y:
+        temp = subtractx(temp, y, base)
+
+    # If the result is negative, add the divisor to it
+    if temp[0] == '-':
+        temp = add(temp, y, base)
+
+    return temp
+
 def addition(x: str, y: str, base: int) -> str:
     """
     Adds two numbers in a given base.
@@ -103,36 +141,12 @@ def addition(x: str, y: str, base: int) -> str:
     for i in range(max_len - 1, -1, -1):
         total = carry + int(convert_to_base_10(x[i], base)) + int(convert_to_base_10(y[i], base))
         carry = total // base
-        result = symbols[total % base] + result
+        result = symbols[int(modulus(str(total), str(base), base))] + result
 
     if carry:
         result = symbols[carry] + result
 
     return result.lstrip('0') or '0'
-
-def mod_addition(x: str, y: str, mod: str, base: int) -> str:
-    """
-    Adds two numbers in a given base and then takes the modulus.
-
-    :param x: The first number.
-    :type x: str
-    :param y: The second number.
-    :type y: str
-    :param mod: The modulus.
-    :type mod: str
-    :param base: The base of the numbers.
-    :type base: int
-    :return: The result of (x + y) % mod.
-    :rtype: str
-    """
-    temp_sum = addition(x, y, base)
-    
-    while is_greater(temp_sum, mod, base) or temp_sum == mod:
-        temp_sum = substraction(temp_sum, mod, base)
-    while is_greater('0', temp_sum, base):
-        temp_sum = addition(temp_sum, mod, base)
-        
-    return temp_sum
 
 def substraction(x: str, y: str, base: int) -> str:
     """
@@ -168,33 +182,9 @@ def substraction(x: str, y: str, base: int) -> str:
     for i in range(max_len - 1, -1, -1):
         diff = int(convert_to_base_10(x[i], base)) - int(convert_to_base_10(y[i], base)) - carry
         carry = 1 if diff < 0 else 0
-        result = symbols[diff % base] + result
+        result = symbols[int(modulus(str(diff), str(base), base))] + result
 
     return result.lstrip('0') or '0'
-
-def mod_subtraction(x: str, y: str, mod: str, base: int) -> str:
-    """
-    Subtracts the second number from the first in a given base and then takes the modulus.
-
-    :param x: The first number.
-    :type x: str
-    :param y: The second number.
-    :type y: str
-    :param mod: The modulus.
-    :type mod: str
-    :param base: The base of the numbers.
-    :type base: int
-    :return: The result of (x - y) % mod.`
-    :rtype: str
-    """
-    temp_diff = substraction(x, y, base)
-    
-    while is_greater(temp_diff, mod, base) or temp_diff == mod:
-        temp_diff = substraction(temp_diff, mod, base)
-    while is_greater('0', temp_diff, base):
-        temp_diff = addition(temp_diff, mod, base)
-        
-    return temp_diff
 
 def multiplication(x: str, y: str, base: int) -> str:
     """
@@ -228,10 +218,11 @@ def multiplication(x: str, y: str, base: int) -> str:
         for digit_y in reversed(y):
             product = int(digit_x, base) * int(digit_y, base) + carry
             carry = product // base
+            # temp_result = symbols[int(modulus(str(product), str(base), base))] + temp_result
             temp_result = symbols[product % base] + temp_result
         if carry:
             temp_result = symbols[carry] + temp_result
-        result = addition(result + '0' * i, temp_result, base)
+        result = addition(result, temp_result + '0' * i, base)
 
     return result
 
@@ -570,4 +561,3 @@ def modulus_multiplication(x: str, y: str, mod: str, radix: int) -> str:
     z = modulus_red(z1, mod, radix)
     return z
 # print(modulus_multiplication("10","3","7",10))
-

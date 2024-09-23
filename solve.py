@@ -11,7 +11,7 @@
 # Vinh Nguyen (1957104) 
 # Khoi Nguyen (1979388)
 # Nam Mai (1959190)
-# author_name_4 (author_student_ID_4)
+# Abdifitaah Mohamed Hussein (1493086)
 ##
 
 # Import built-in json library for handling input/output 
@@ -20,16 +20,17 @@ import json
 import helper
 
 
-def gcdExtended(a: int, b: int) -> tuple[int, int, int]:
+def gcdExtended(a: str, b: str, base: int) -> tuple[str, str, str]:
     # Base Case
-    if a == 0:
-        return b, 0, 1
+    if a == "0":
+        return b, "0", "1"
 
-    gcd, x1, y1 = gcdExtended(b%a, a)
+    gcd, x1, y1 = gcdExtended(helper.modulus(b, a, base), a, base)
 
-    # Update x and y using results of recursive
-    # call
-    x = y1 - (b//a) * x1
+    # Update x and y using results of recursive call
+    quotient = helper.floor_div(b, a, base)
+    product = helper.multiplication(quotient, x1, base)
+    x = helper.substraction(y1, product, base)
     y = x1
 
     return gcd, x, y
@@ -214,7 +215,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
         elif exercise["operation"] == "extended_euclidean_algorithm":
             x = helper.convert_to_base_10(exercise["x"], radix)
             y = helper.convert_to_base_10(exercise["y"], radix)
-            gcd, a, b = gcdExtended(int(x), int(y))
+            gcd, a, b = gcdExtended(x, y)
             answer["answer-a"] = convert_from_base_10(str(a), radix)
             answer["answer-b"] = convert_from_base_10(str(b), radix)
             answer["answer-gcd"] = convert_from_base_10(str(gcd), radix)
@@ -290,3 +291,12 @@ def solve_exercise(exercise_location : str, answer_location : str):
         json.dump(answer, answer_file, indent=4)
 
 solve_exercise("Exercises/exercise12.json", "answer.json")
+
+# x, y = '10', '3'
+# radix = 10 
+# answer = {} 
+# gcd, a, b = gcdExtended(x, y, radix)
+# answer["answer-a"] = convert_from_base_10(str(a), radix)
+# answer["answer-b"] = convert_from_base_10(str(b), radix)
+# answer["answer-gcd"] = convert_from_base_10(str(gcd), radix)
+# print(answer)
