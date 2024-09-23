@@ -19,6 +19,7 @@ import json
 #import fixedint
 import helper
 
+
 def gcdExtended(a: int, b: int) -> tuple[int, int, int]:
     # Base Case
     if a == 0:
@@ -97,14 +98,16 @@ def solve_exercise(exercise_location : str, answer_location : str):
             x = exercise["x"]
             y = exercise["y"]
             base = int(radix)
-            answer["answer"] = add(x,y,base)
+            answer["answer"] = helper.add(x,y,base)
             # Solve integer arithmetic addition exercise
             #pass
         elif exercise["operation"] == "subtraction":
             # Solve integer arithmetic subtraction exercise
-            x = helper.convert_to_base_10(exercise["x"], radix)
-            y = helper.convert_to_base_10(exercise["y"], radix)
-            answer["answer"] = convert_from_base_10(x - y, radix)
+            x = exercise["x"]
+            y = exercise["y"]
+            base = int(radix)
+            answer["answer"] = helper.subtractx(x,y,base)
+
         elif exercise["operation"] == "multiplication_primary":
             x = exercise["x"]
             y = exercise["y"]
@@ -268,8 +271,8 @@ def solve_exercise(exercise_location : str, answer_location : str):
             # Placeholder for future implementation
             pass
         
-        # else:
-            # raise ValueError(f"Unsupported operation: {exercise["operation"]}")
+        else:
+            raise ValueError(f"Unsupported operation: {exercise['operation']}")
     
     # Open file at answer_location for writing, creating the file if it does not exist yet
     # (and overwriting it if it does already exist).
@@ -277,4 +280,4 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
-solve_exercise("Exercises/exercise3.json", "answer.json")
+#solve_exercise("Exercises/exercise4.json", "answer.json")
