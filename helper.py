@@ -590,7 +590,7 @@ def inversion(x: str, m: str, base: int) -> str:
         y0, y1 = y1, substraction(y0, multiplication(q, y1, base), base)
 
     if a != '1':
-        return 'ERROR - inverse does not exist'
+        return None
 
     if x0[0] == '-':
         x0 = add(x0, m, base)
