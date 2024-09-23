@@ -16,7 +16,7 @@
 
 # Import built-in json library for handling input/output 
 import json
-import fixedint
+#import fixedint
 import helper
 
 # support function addition part
@@ -372,9 +372,9 @@ def solve_exercise(exercise_location : str, answer_location : str):
         elif exercise["operation"] == "addition":
             # Solve modular arithmetic addition exercise
             # Convert x, y, m to base 10
-            x = helper.convert_to_base_10(exercise["x"], radix)
-            y = helper.convert_to_base_10(exercise["y"], radix)
-            modulus = helper.convert_to_base_10(exercise["modulus"], radix)
+            #x = helper.add(exercise["x"],exercise["y"], radix)
+            #y = helper.convert_to_base_10(exercise["y"], radix)
+            #modulus = helper.convert_to_base_10(exercise["modulus"], radix)
             
             if modulus == 0:
                 answer["answer"] = None
@@ -431,4 +431,4 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
-solve_exercise("Exercises/exercise4.json", "answer.json")
+#solve_exercise("Exercises/exercise4.json", "answer.json")

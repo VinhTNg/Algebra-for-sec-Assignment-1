@@ -239,7 +239,6 @@ def multiplication(x: str, y: str, base: int) -> str:
 
 
 import random
-
 def subtractx(a_str, b_str, base):
     def create(base):
         mp = {10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F'}
@@ -347,7 +346,6 @@ def subtractx(a_str, b_str, base):
     return result
 
 def add(a_str, b_str, base):
-    # Function to perform addition without using '+' or '%'
     def create(base):
         mp = {10: 'A', 11: 'B', 12: 'C', 13: 'D', 14: 'E', 15: 'F'}
         digits = [mp[i] if i in mp else str(i) for i in range(base)]
@@ -362,70 +360,125 @@ def add(a_str, b_str, base):
             y = '0' + y
         return x, y
 
+    def compare_numbers(a_str, b_str, basenum):
+        # Compare two numbers represented as strings
+        for a_digit, b_digit in zip(a_str, b_str):
+            index_a = basenum.index(a_digit)
+            index_b = basenum.index(b_digit)
+            if index_a > index_b:
+                return 1  # a_str > b_str
+            elif index_a < index_b:
+                return -1  # a_str < b_str
+        return 0  # a_str == b_str
+
+    # Handle negative inputs
+    negative_a = False
+    negative_b = False
+
+    if a_str.startswith('-'):
+        negative_a = True
+        a_str = a_str[1:]
+    if b_str.startswith('-'):
+        negative_b = True
+        b_str = b_str[1:]
+
     basenum = create(base)
     a_str, b_str = padding(a_str, b_str)
 
-    result_digits = []
-    carry = 0  # Use integer for carry
+    # Determine operation based on the signs of a and b
+    if negative_a == negative_b:
+        # Both numbers have the same sign
+        # Perform addition of magnitudes
+        result_digits = []
+        carry = 0  # Use integer for carry
 
-    # Process digits from least significant to most significant
-    for i in range(len(a_str) -1, -1, -1):
-        a_digit = a_str[i]
-        b_digit = b_str[i]
+        # Process digits from least significant to most significant
+        for i in range(len(a_str) - 1, -1, -1):
+            a_digit = a_str[i]
+            b_digit = b_str[i]
 
-        # Sum digits without using '+'
-        index_a = basenum.index(a_digit)
-        index_b = basenum.index(b_digit)
-        index_carry = carry
+            # Sum digits without using '+'
+            index_a = basenum.index(a_digit)
+            index_b = basenum.index(b_digit)
+            index_carry = carry
 
-        total = index_a + index_b + index_carry
+            total = index_a + index_b + index_carry
 
-        # Determine new carry
-        if total >= len(basenum):
-            carry = 1
-            total -= len(basenum)
+            # Determine new carry
+            if total >= len(basenum):
+                carry = 1
+                total -= len(basenum)
+            else:
+                carry = 0
+
+            # Append result digit
+            result_digits.insert(0, basenum[total])
+
+        if carry == 1:
+            result_digits.insert(0, '1')
+
+        # Remove leading zeros
+        while len(result_digits) > 1 and result_digits[0] == '0':
+            del result_digits[0]
+
+        result_str = ''.join(result_digits)
+        if negative_a:
+            result_str = '-' + result_str
+    else:
+        # Numbers have different signs
+        # Subtract the smaller magnitude from the larger magnitude
+        comparison = compare_numbers(a_str, b_str, basenum)
+        if comparison == 0:
+            return '0'
+        elif comparison > 0:
+            # a_str magnitude > b_str magnitude
+            negative_result = negative_a  # Result has the sign of 'a'
+            a_str_mag = a_str
+            b_str_mag = b_str
         else:
-            carry = 0
+            # b_str magnitude > a_str magnitude
+            negative_result = negative_b  # Result has the sign of 'b'
+            a_str_mag = b_str
+            b_str_mag = a_str
 
-        # Append result digit
-        result_digits.insert(0, basenum[total])
+        result_digits = []
+        borrow = 0  # Use integer for borrow
 
-    if carry == 1:
-        result_digits.insert(0, '1')
+        # Process digits from least significant to most significant
+        for i in range(len(a_str_mag) - 1, -1, -1):
+            a_digit = a_str_mag[i]
+            b_digit = b_str_mag[i]
 
-    # Remove leading zeros
-    while len(result_digits) > 1 and result_digits[0] == '0':
-        del result_digits[0]
+            # Subtract digits without using '-'
+            index_a = basenum.index(a_digit)
+            index_b = basenum.index(b_digit) + borrow
 
-    result_str = ''.join(result_digits)
+            if index_a >= index_b:
+                index_diff = index_a - index_b
+                borrow = 0
+            else:
+                index_a += len(basenum)
+                index_diff = index_a - index_b
+                borrow = 1
+
+            # Append result digit
+            result_digits.insert(0, basenum[index_diff])
+
+        # Remove leading zeros
+        while len(result_digits) > 1 and result_digits[0] == '0':
+            del result_digits[0]
+
+        result_str = ''.join(result_digits)
+        if negative_result:
+            result_str = '-' + result_str
+
     return result_str
 
-def test_subtraction(num_trials=100000):
-    for _ in range(num_trials):
-        # Generate random numbers a and b in the range (-10**500, 10**500)
-        a = random.randint(-10**500, 10**500)
-        b = random.randint(-10**500, 10**500)
 
-        # Convert numbers to strings
-        a_str = str(a)
-        b_str = str(b)
 
-        # Perform subtraction using our function
-        result = subtractx(a_str, b_str, 10)
 
-        # Compute expected result using Python's built-in subtraction
-        expected = str(a - b)
 
-        # Compare results
-        if result != expected:
-            print(f"Test failed for a={a_str}, b={b_str}")
-            print(f"Expected: {expected}, Got: {result}")
-            return
 
-    print(f"All {num_trials} tests passed successfully!")
-
-# Run the test function
-test_subtraction()
 
 
 def karatsuba(x: str, y: str, base: int) -> str:
@@ -476,4 +529,4 @@ def length(x, r):
     return k
 
 
-print(add("999","-1"))
+print(add("999","-1",10))
