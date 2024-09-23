@@ -1,4 +1,4 @@
-import solve
+
 
 def string_length(s: str) -> int:
     """
@@ -420,7 +420,7 @@ def test_subtraction(num_trials=100000):
     print(f"All {num_trials} tests passed successfully!")
 
 # Run the test function
-test_subtraction()
+#test_subtraction()
 
 
 def karatsuba(x: str, y: str, base: int) -> str:
@@ -470,3 +470,5 @@ def length(x, r):
         k = addition(k, '1', r)
     return k
 
+
+print(add("999","-1"))

@@ -475,7 +475,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
             pass
         
         else:
-            raise ValueError(f"Unsupported operation: {exercise["operation"]}")
+            raise ValueError(f"Unsupported operation: {exercise['operation']}")
     
     # Open file at answer_location for writing, creating the file if it does not exist yet
     # (and overwriting it if it does already exist).
