@@ -389,15 +389,16 @@ def solve_exercise(exercise_location : str, answer_location : str):
         if exercise["operation"] == "reduction":
             # Solve modular arithmetic reduction exercise
             x = convert_to_base_10(exercise["x"], radix)
-            modulus = convert_to_base_10(exercise["modulus"], radix)
-
+            if exercise["modulus"][0] == "-":
+                modulus = helper.make_neg(exercise["modulus"])	
+                modulus = convert_to_base_10(modulus, radix)
+            else: 
+                modulus = convert_to_base_10(exercise["modulus"], radix)
             if modulus == 0:
                 answer["answer"] = None
             else:
-                if modulus < 0:
-                    modulus = -modulus
                 while x > modulus:
-                    x -= modulus
+                    sum = helper.substraction(x, modulus, 10)
                 answer["answer"] = convert_from_base_10(x, radix)
         
         elif exercise["operation"] == "addition":
@@ -405,16 +406,17 @@ def solve_exercise(exercise_location : str, answer_location : str):
             # Convert x, y, m to base 10
             x = convert_to_base_10(exercise["x"], radix)
             y = convert_to_base_10(exercise["y"], radix)
-            modulus = convert_to_base_10(exercise["modulus"], radix)
-            
+            if exercise["modulus"][0] == "-":
+                modulus = helper.make_neg(exercise["modulus"])
+                modulus = convert_to_base_10(modulus, radix)
+            else:
+                modulus = convert_to_base_10(exercise["modulus"], radix)
             if modulus == 0:
                 answer["answer"] = None
             else:
-                if modulus < 0:
-                    modulus = -modulus
                 sum = x + y
                 while sum > modulus:
-                    sum -= modulus
+                    sum = helper.substraction(sum, modulus, 10)
                 answer["answer"] = convert_from_base_10(sum, radix)
         
         elif exercise["operation"] == "subtraction":

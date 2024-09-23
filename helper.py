@@ -418,7 +418,7 @@ def test_subtraction(num_trials=100000):
     print(f"All {num_trials} tests passed successfully!")
 
 # Run the test function
-test_subtraction()
+# test_subtraction()
 
 
 def karatsuba(x: str, y: str, base: int) -> str:
