@@ -39,7 +39,6 @@ def padding(x, y):
     return x, y
 
 
-
 def right_pad(x, y):
     # Args:
     #   x: First number as an int or string.
@@ -182,7 +181,7 @@ def gcdExtended(a: int, b: int) -> tuple[int, int, int]:
     if a == 0:
         return b, 0, 1
 
-    gcd, x1, y1 = gcdExtended(b % a, a)
+    gcd, x1, y1 = gcdExtended(max(b,a) % min(b,a), min(b,a))
 
     # Update x and y using results of recursive
     # call
@@ -348,7 +347,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
             if isNegative:
                 result_str = '-' + result_str
     
-            answer = convert_from_base_10(int(result_str), radix)
+            answer["answer"] = convert_from_base_10(int(result_str), radix)
         elif exercise["operation"] == "multiplication_karatsuba":
             pass
         elif exercise["operation"] == "extended_euclidean_algorithm":
@@ -442,4 +441,4 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
-solve_exercise("Exercises/exercise11.json", "answer.json")
+solve_exercise("Exercises/exercise4.json", "answer.json")
