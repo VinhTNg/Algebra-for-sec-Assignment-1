@@ -177,6 +177,20 @@ def add(a,b ,base=3):
         if xs and not ys:  #x+-y
             return None
 
+def gcdExtended(a: int, b: int) -> tuple[int, int, int]:
+    # Base Case
+    if a == 0:
+        return b, 0, 1
+
+    gcd, x1, y1 = gcdExtended(b % a, a)
+
+    # Update x and y using results of recursive
+    # call
+    x = y1 - (b//a) * x1
+    y = x1
+
+    return gcd, x, y
+
 # Define a 32-bit integer type using fixedint
 Int32 = fixedint.Int32
 
@@ -280,16 +294,70 @@ def solve_exercise(exercise_location : str, answer_location : str):
             y = exercise["y"]
             base = int(radix)
             answer["answer"] = add(x,y,base)
-
-
-
-
             # Solve integer arithmetic addition exercise
             #pass
         elif exercise["operation"] == "subtraction":
             # Solve integer arithmetic subtraction exercise
+            x = convert_to_base_10(exercise["x"], radix)
+            y = convert_to_base_10(exercise["y"], radix)
+            answer["answer"] = convert_from_base_10(x - y, radix)
+        elif exercise["operation"] == "multiplication_primary":
+            # Solve integer arithmetic multiplication by primary school method
+            x = convert_to_base_10(exercise["x"], exercise["radix"]) # convert x in radix given in the exercise to base 10
+            y = convert_to_base_10(exercise["y"], exercise["radix"]) # convert y in radix given in the exercise to base 10
+            
+            # Check the negativity of the result
+            isNegative = (x < 0) ^ (y < 0)  # XOR: True if only one of them is negative
+            
+            # Take absolute values for multiplication
+            x = abs(x)
+            y = abs(y)
+            
+            # Convert numbers to strings
+            x_str = str(x)
+            y_str = str(y)
+            
+            #Reverse both string 
+            x_str = x_str[::-1]
+            y_str = y_str[::-1]
+            
+            # Initialize a list to store the intermediate results
+            results = [0] * (len(x_str) + len(y_str))
+            
+            # Perform the multiplication digit by digit
+            for i in range(len(x_str)):
+                for j in range(len(y_str)):
+                    
+                    # Multiply the digits and add to the corresponding position in results
+                    multiSingleDigit = int(x_str[i]) * int(y_str[j])
+                    results[i + j] += multiSingleDigit
+            
+                    # Handle carry if the result is more than 9
+                    if results[i + j] >= 10:
+                        results[i + j + 1] += results[i + j] // 10
+                        results[i + j] %= 10
+    
+            # Remove leading zeros from the results
+            while len(results) > 1 and results[-1] == 0:
+                results.pop()
+    
+            # Convert the results list back into a number
+            result_str = ''.join(map(str, results[::-1]))
+            
+            # Apply the negative sign if needed
+            if isNegative:
+                result_str = '-' + result_str
+    
+            answer = convert_from_base_10(int(result_str), radix)
+        elif exercise["operation"] == "multiplication_karatsuba":
             pass
-        # et cetera
+        elif exercise["operation"] == "extended_euclidean_algorithm":
+            x = convert_to_base_10(exercise["x"], radix)
+            y = convert_to_base_10(exercise["y"], radix)
+            gcd, a, b = gcdExtended(x, y)
+            answer["answer-a"] = convert_from_base_10(a, radix)
+            answer["answer-b"] = convert_from_base_10(b, radix)
+            answer["answer-gcd"] = convert_from_base_10(gcd, radix)
     else:  # exercise["type"] == "modular_arithmetic"
         # Check what operation within the modular arithmetic operations we need to solve
         if exercise["operation"] == "reduction":
@@ -375,4 +443,4 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
-solve_exercise("Exercises/exercise10.json", "answer.json")
+solve_exercise("Exercises/exercise9.json", "answer.json")
