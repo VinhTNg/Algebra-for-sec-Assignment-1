@@ -1,4 +1,3 @@
-import solve
 
 def string_length(s: str) -> int:
     """
@@ -527,6 +526,8 @@ def length(x, r):
         x = x[1:]
         k = addition(k, '1', r)
     return k
+
+
 
 
 #print(subtractx("1000000000000000000","-1",10))
