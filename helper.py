@@ -19,14 +19,14 @@ def convert_to_base_10(number: str, base: int) -> str:
         is_negative = True
         number = number[1:]
     
-    result = 0
+    result = "0"
     for char in number:
         if char not in digits[:base]:
             raise ValueError(f"Invalid digit '{char}' for base {base}.")
         digit_value = digits.index(char)
-        result = result * base + digit_value
+        result = addition(str(multiplication(result, str(base), base)), digit_value)
     
-    return str(-result) if is_negative else str(result)
+    return "-" + result if is_negative else result
 
 def make_neg(num: str) -> str:
     """
@@ -232,6 +232,64 @@ def multiplication(x: str, y: str, base: int) -> str:
         if carry:
             temp_result = symbols[carry] + temp_result
         result = addition(result + '0' * i, temp_result, base)
+
+    return result
+
+def mod(x: str, mod: str, base: int) -> str:
+    """
+    Find the modulus of a number in a given base.
+    
+    :param x: The number.
+    :type x: str
+    :param mod: The modulus.
+    :type mod: str
+    :param base: The base of the numbers.
+    :type base: int
+    :return: The result of x % mod.
+    :rtype: str
+    """
+    temp = x
+    if mod == '0':
+        raise ValueError("Modulus cannot be 0.")
+    if mod[0] == '-':
+        mod = mod[1:]
+    while is_greater(temp, mod, base) or temp == mod:
+        temp = substraction(temp, mod, base)
+    return temp
+
+def floor_div(x: str, y: str, base: int) -> str:
+    """
+    Divides the first number by the second and returns the floor of the result.
+
+    :param x: The dividend.
+    :type x: str
+    :param y: The divisor.
+    :type y: str
+    :param base: The base of the numbers.
+    :type base: int
+    :return: The floor of x / y.
+    :rtype: str
+    """
+    if y == '0':
+        raise ValueError("Cannot divide by zero.")
+    
+    if x[0] == '-' and y[0] == '-':
+        return floor_div(make_neg(x), make_neg(y), base)
+    if x[0] == '-':
+        return make_neg(floor_div(make_neg(x), y, base))
+    if y[0] == '-':
+        return make_neg(floor_div(x, make_neg(y), base))
+
+    if is_greater(y, x, base):
+        return '0'
+    if x == y:
+        return '1'
+
+    temp = x
+    result = '0'
+    while is_greater(temp, y, base) or temp == y:
+        temp = substraction(temp, y, base)
+        result = addition(result, '1', base)
 
     return result
 
